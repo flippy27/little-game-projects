@@ -1,0 +1,15 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>qrScan</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-button (click)="scanBarcode()">Leer qr</ion-button>
+  <ion-label>{{scannedData.user}}</ion-label>
+  <ion-label>{{scannedData.password}}</ion-label>
+  <ion-button routerLink="/informacion-cargador">Saltar qr</ion-button>
+</ion-content>

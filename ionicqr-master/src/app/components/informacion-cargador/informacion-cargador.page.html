@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Informacion Cargador</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item>Direccion : {{cargador.direccion}}</ion-item>
+  <ion-item>S/N : {{cargador.nombre.replaceAll('_','-')|uppercase}}</ion-item>
+  <ion-item>Potencia maxima : {{cargador.potencia_maxima}}</ion-item>
+  <ion-card *ngFor="let manguera of cargador.mangueras" style="min-height: 160px;max-height: 400px;">
+    <ion-card-header>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="8">            
+            <ion-card-subtitle>Conector: {{manguera.numero_manguera}}</ion-card-subtitle>
+            <ion-card-title>{{manguera.tipo_conector.nombre}}</ion-card-title>
+            <ion-card-subtitle>Potencia maxima:</ion-card-subtitle>
+            <ion-card-title>{{cargador.potencia_maxima/2}}kW</ion-card-title>
+          </ion-col>
+          <ion-col size="4" >
+            <!-- AQUIO VA LA IMAGEN -->
+            <ion-img src="{{manguera.iconColor}}" width="100%" ></ion-img>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+    </ion-card-header>
+  </ion-card>
+</ion-content>

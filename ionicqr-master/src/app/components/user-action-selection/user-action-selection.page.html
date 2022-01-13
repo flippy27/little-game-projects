@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="logout()">Salir</ion-button>
+    </ion-buttons>
+    <ion-title>Seleccion accion</ion-title>
+    <ion-buttons slot="end">
+      <ion-icon name="qr-code-outline" size="large" style="padding-left: 10px;" (click)="scanBarcode()"></ion-icon>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-card *ngFor="let cargador of cargadores" (click)="seleccionCargadores(cargador)" style="min-height: 120px;"> 
+    <ion-card-header style="display: flex;flex-direction: column;justify-content: center;">
+      <ion-card-title>{{cargador.alias_equipo}}</ion-card-title>
+      <ion-card-subtitle>{{cargador.direccion}} </ion-card-subtitle>
+    </ion-card-header>
+  </ion-card>
+</ion-content>
+<ion-label *ngIf="scannedData">{{scannedData|json}}</ion-label>
