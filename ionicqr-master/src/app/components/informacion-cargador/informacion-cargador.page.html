@@ -1,29 +1,60 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
+      <ion-back-button class="color-colbun-gray"></ion-back-button>
     </ion-buttons>
-    <ion-title>Informacion Cargador</ion-title>
+    <ion-title class="color-colbun-gray">Información Cargador</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-item>Direccion : {{cargador.direccion}}</ion-item>
-  <ion-item>S/N : {{cargador.nombre.replaceAll('_','-')|uppercase}}</ion-item>
-  <ion-item>Potencia maxima : {{cargador.potencia_maxima}}</ion-item>
-  <ion-card *ngFor="let manguera of cargador.mangueras" style="min-height: 160px;max-height: 400px;">
+  <ion-row class="ion-padding-top">
+    <ion-col size="8">
+
+      <ion-item class="color-colbun-gray">Dirección : {{cargador.direccion}}</ion-item>
+      <ion-item class="color-colbun-gray">S/N : {{cargador.nombre.replaceAll('_','-')|uppercase}}</ion-item>
+      <ion-item class="color-colbun-gray">Potencia máxima : {{cargador.potencia_maxima}}kW</ion-item>
+    </ion-col>
+    <ion-col size="4">
+      <ion-button style="width: 100%;" id="ayudaTrigger">Ayuda</ion-button>
+      <ion-button style="width: 100%;">
+        <ion-icon name="locate-outline"></ion-icon>
+      </ion-button>
+      <ion-button style="width: 100%;">
+        <ion-icon name="flash-outline"></ion-icon>
+      </ion-button>
+    </ion-col>
+  </ion-row>
+  <ion-card *ngFor="let manguera of cargador.mangueras" style="min-height: 215px;max-height: 400px;"
+    [style.background-color]="manguera.whole_background" [style.color]="manguera.foreground_color"
+    (click)="MangueraClicked(manguera)">
     <ion-card-header>
       <ion-grid>
-        <ion-row>
-          <ion-col size="8">            
-            <ion-card-subtitle>Conector: {{manguera.numero_manguera}}</ion-card-subtitle>
-            <ion-card-title>{{manguera.tipo_conector.nombre}}</ion-card-title>
-            <ion-card-subtitle>Potencia maxima:</ion-card-subtitle>
-            <ion-card-title>{{cargador.potencia_maxima/2}}kW</ion-card-title>
+        <ion-row style="height: 175px;">
+
+          <ion-col size="8">
+            <ion-row>
+              <ion-col>
+                <ion-card-subtitle [style.color]="manguera.foreground_color">Conector: {{manguera.numero_manguera}}
+                </ion-card-subtitle>
+                <ion-card-title [style.color]="manguera.foreground_color">{{manguera.tipo_conector.nombre}}
+                </ion-card-title>
+                <ion-card-subtitle [style.color]="manguera.foreground_color">Potencia máxima:</ion-card-subtitle>
+                <ion-card-title [style.color]="manguera.foreground_color">{{cargador.potencia_maxima}}kW
+                </ion-card-title>
+              </ion-col>
+            </ion-row>
+            <ion-row style="margin-top: 20px;">
+              <ion-col>
+                <ion-text style="font-size: 20px;color: black;font-weight: 600;">Disponible</ion-text>
+                <br>
+                <ion-text style="font-size: 16px;color: black;">CLP 250/kWh</ion-text>
+              </ion-col>
+            </ion-row>
           </ion-col>
-          <ion-col size="4" >
+          <ion-col size="4" style="display:flex;align-items: center;justify-content: center;">
             <!-- AQUIO VA LA IMAGEN -->
-            <ion-img src="{{manguera.iconColor}}" width="100%" ></ion-img>
+            <ion-img src="{{manguera.iconColor}}" width="100%"></ion-img>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -31,3 +62,17 @@
     </ion-card-header>
   </ion-card>
 </ion-content>
+
+<ion-modal #ayudaModal trigger="ayudaTrigger">
+  <ng-template>
+    <ion-header translucent>
+      <ion-toolbar>
+        <ion-title>Modal Content</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="dismissModal(ayudaModal)">Close</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>Modal Content</ion-content>
+  </ng-template>
+</ion-modal>

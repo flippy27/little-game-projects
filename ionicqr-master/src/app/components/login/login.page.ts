@@ -49,6 +49,7 @@ export class LoginPage implements OnInit {
     //this.reloading = true; // Para esconder el cuadro de login, ya que por alguna razon, se queda pegado mientras recarga ¯\_(ツ)_/¯
 
     //this.mostrarLoading();
+    user.email = user.email.toLowerCase();
     this.auth.login(user.email, user.password)
       .pipe(first())
       .subscribe(
@@ -69,28 +70,11 @@ export class LoginPage implements OnInit {
   redirectByUser() {
     
     let token;
-    let tknInfo;
 
-    if (this.platform.is("desktop")) {
-    } else {
-      /* token = this.storageS.get('access_token');
-      this.tknInfo = token; */
-      
-    }
+   
     token = localStorage.getItem('access_token');
     this.tknInfo = this.auth.jwtHelper.decodeToken(token);
-    console.log('tkninfo login',tknInfo);
     
-
-
-
-    let ruta = '';
-
-    /* if (this.tknInfo.empresas_id === 16 && this.tknInfo.role === 29) {//COLBUN USUARIO
-      ruta = '/user-action-selection';
-    } else {
-      ruta = '';
-    } */
     this.router.navigate(['/user-action-selection']);
   }
 

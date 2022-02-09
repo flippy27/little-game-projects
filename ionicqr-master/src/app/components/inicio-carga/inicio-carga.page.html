@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button class="color-colbun-gray"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="color-colbun-gray">{{manguera.tipo_conector.nombre}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content scrollY="false">
+  <div class="ion-margin-top">
+    <div style="display: flex;align-items: center;flex-direction: column;margin-top: 20px;">
+      <ion-img style="width:60px" src="{{conectorImg}}"></ion-img>
+      <ion-text style="margin-top: 10px;" class="color-colbun-gray">Disponible para cargar</ion-text>
+      <ion-text style="margin-top: 10px;" class="color-colbun-gray">24 kW</ion-text>
+      <ion-text style="margin-top: 10px;" class="color-colbun-gray">CLP 250/kWh</ion-text>
+    </div>
+  </div>
+  <div style="height: 100%;background-color: #85af37;border-top-left-radius: 20px;margin-top: 30px;border-top-right-radius: 20px;">
+    <ion-row>
+      <ion-col style="display: flex;justify-content: center;margin-top: 30px;">
+        <ion-button style="width: 80%;height: 150px;font-size: 25px;">Iniciar carga</ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row style="display: flex;justify-content: center;margin-top: 30px;">
+        <div style="width: 100%;display: flex;justify-content: center;">
+          <ion-text style="font-size: 20px;font-weight: bold;color: white;">1. Conecte el cable</ion-text>
+        </div>
+        <div>
+          <ion-text style="font-size: 20px;font-weight: bold;color: white;">2. Presione para iniciar</ion-text>
+        </div>
+    </ion-row>
+  </div>
+</ion-content>

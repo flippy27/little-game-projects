@@ -44,4 +44,19 @@ export class CargadorServiceService {
 
     return this.http.post(this.uri + "/ultimasalarmasMangueras", data, this.options)
   }
+  getAllUserTransactions(data: any): Observable<any> {
+    return this.http.post(this.uri + "/getAllUserTransactions", data, this.options)
+  }
+  getDatosOcppTransactionID(data: any): Observable<any> {
+    return this.http.post(this.uri + "/getDatosOcppTransactionID", data, this.options)
+  }
+  getFavoritosByUserIDAndType(data: any): Observable<any> {
+    return this.http.post(this.uri + "/getFavoritosByUserIDAndType", data, this.options)
+  }
+  setFavorito(data: any): Observable<any> {
+    return this.http.post(this.uri + "/setFavorito", data, this.options)
+  }
+  updateFavorito(data: any): Observable<any> {
+    return this.http.post(this.uri + "/updateFavorito", data, this.options)
+  }
 }

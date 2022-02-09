@@ -14,13 +14,13 @@ export class StorageService {
     const storage = await this.storage.create();
     this._storage = storage;
   }
-  public set(key: string, value: any) {
-    this._storage?.set(key, value);
+  async set(key: string, value: any) {
+    await this._storage?.set(key, value);
   }
-  public get(key: string) {
-    this._storage?.get(key);
+  async  get(key: string) {
+    await this._storage?.get(key);
   }
-  public remove(key: string) {
-    this._storage?.remove(key);
+  async remove(key: string) {
+    await this._storage?.remove(key);
   }
 }

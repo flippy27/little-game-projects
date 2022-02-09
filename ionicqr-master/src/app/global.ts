@@ -1,5 +1,5 @@
-import { environment } from '../environments/environment.prod';
+import { environment } from '../environments/environment';
 export const globalApi = {
-    uri:'http://pge.dhemax.cl:3001',
+    uri:environment.uri,
     //uri: 'http://192.168.170.97:3001',
 }

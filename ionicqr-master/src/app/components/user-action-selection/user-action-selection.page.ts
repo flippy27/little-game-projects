@@ -5,6 +5,7 @@ import { CargadorServiceService } from '../../services/cargador-service.service'
 import { forkJoin } from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { StorageService } from '../../services/storage.service';
 @Component({
   selector: 'app-user-action-selection',
   templateUrl: './user-action-selection.page.html',
@@ -15,22 +16,91 @@ export class UserActionSelectionPage implements OnInit {
   cargadores;
   tiposConectores;
   scannedData;
+  userTransactions = [];
+  user_id;
+  usuarioNormal;
+  favoritos = [];
+  favoritosTxt;
+  favoritoBoolean: boolean = false;
+  cargadoresFavoritos = [];
+  cargadoresNoFavoritos = [];
   constructor(
     private jwtHelper: JwtHelperService,
     private cargadorService: CargadorServiceService,
     private router: Router,
-    private auth:AuthService,
+    private auth: AuthService,
     private barcodeScanner: BarcodeScanner,
+    private storage: StorageService,
 
   ) { }
 
-  ngOnInit() {
-
+  async ngOnInit() {
+    this.changeFavFilter();
     const token: any = localStorage.getItem('access_token');
     this.tokenPayload = this.jwtHelper.decodeToken(token);
+    this.user_id = this.tokenPayload.user_id;
+    if (this.tokenPayload.user_id == 54 || this.tokenPayload.user_id == 55) {//main user o admin
+      this.usuarioNormal = false;
+    } else {//usuario normal
+      this.usuarioNormal = true;
+    }
     this.getCargadores();
 
   }
+  changeFavFilter() {
+    this.favoritoBoolean = !this.favoritoBoolean;
+    if (this.favoritoBoolean) {
+      this.favoritosTxt = "Ver favoritos";
+      this.cargadores = this.cargadoresNoFavoritos;
+    } else {
+      this.favoritosTxt = "Favoritos"
+      this.cargadores = this.cargadoresFavoritos;
+    }
+  }
+  getFavoritos() {
+    this.cargadoresFavoritos = [];
+    this.cargadorService.getFavoritosByUserIDAndType({ usuarios_id: this.user_id, tipos_favoritos_id: 1 }).subscribe(x => {
+      this.favoritos = x;
+      console.log('favoritos',this.favoritos);
+      
+      this.cargadores.forEach(y => {
+        let t = this.favoritos.find(z => { return z.id_valor_favorito == y.id && z.habilitado == 1 });
+        
+        if (t != null) {
+          this.cargadoresFavoritos.push(y);
+        }
+      })
+    })
+  }
+  getHeartIcon(cargador) {
+    let temp = this.favoritos.find(x => { return x.id_valor_favorito == cargador.id });
+    if (temp != null && temp.habilitado == 1) {
+      return "heart"
+    } else {
+      return "heart-outline"
+    }
+
+  }
+  setFavorito(cargador) {
+    let temp = this.favoritos.find(x => { return x.id_valor_favorito == cargador.id });
+    let habilitado = 0;
+    if (temp != null) {
+      if (temp.habilitado == 1) {
+        habilitado = 0;
+      } else {
+        habilitado = 1;
+      }
+      this.cargadorService.updateFavorito({ habilitado: habilitado, usuarios_id: this.tokenPayload.user_id, id_valor_favorito: cargador.id }).subscribe(res => {
+        this.getFavoritos();
+      })
+    } else {
+      this.cargadorService.setFavorito({ usuarios_id: this.tokenPayload.user_id, tipos_favoritos_id: 1, id_valor_favorito: cargador.id }).subscribe(res => {
+        this.getFavoritos();
+      })
+    }
+
+  }
+
   getCargadores() {
     this.cargadorService.getTiposCables().subscribe((result: any) => {
       this.tiposConectores = result;
@@ -60,7 +130,9 @@ export class UserActionSelectionPage implements OnInit {
             })
           })
 
+          this.cargadoresNoFavoritos = res;
           this.cargadores = res;
+          this.getFavoritos();
           //this.loading = false;
           this.prepareDatosMangueras();
         })
@@ -69,9 +141,16 @@ export class UserActionSelectionPage implements OnInit {
   }
   prepareDatosMangueras() {
     let temparr = [];
+    let manguerasIds = [];
     this.cargadores.forEach(x => {
-      temparr.push(this.cargadorService.ultimasalarmasMangueras({ manguera_uno: x.mangueras[0].id, manguera_dos: x.mangueras[1].id }));
-    });
+      x.mangueras.forEach(y => {
+        manguerasIds.push(y.id)
+      })
+    })
+    
+
+    temparr.push(this.cargadorService.ultimasalarmasMangueras({ mangueras_ids: manguerasIds }));
+
     this.getDatosMangueras(temparr);
   }
   ultimosManguera = [];
@@ -89,17 +168,92 @@ export class UserActionSelectionPage implements OnInit {
       }, 5000);
     });
   }
+  transactions = [];
+  getDatosMangueraAdminUser(arr) {
+    let obv = forkJoin(arr).subscribe(res => {
+      this.ultimosManguera = [];
+
+      res.forEach((x: any) => {
+        x.forEach(y => {
+          this.ultimosManguera.push(y);
+        })
+      })
+      obv.unsubscribe();
+      setTimeout(() => {
+        this.prepareDatosMangueras();
+      }, 5000);
+    });
+
+  }
+  getDatosManguerasNormalUser(arr) {
+
+    let allMangueras = [];
+
+    //get user transactions
+    this.cargadorService.getAllUserTransactions({ usuarios_id: this.user_id }).subscribe(res => {
+      //get transactions data
+      let tarr = [];
+      res.forEach(x => {
+        tarr.push(this.cargadorService.getDatosOcppTransactionID({ transaction_id: x.transactionId }));
+      })
+      forkJoin(tarr).subscribe(val => {
+        this.transactions = val;
+
+        this.userTransactions = res;
+        this.ultimosManguera = [];
+        let obv = forkJoin(arr).subscribe(res => {
+          res.forEach((x: any) => {
+            x.forEach(y => {
+              this.ultimosManguera.push(y);
+            })
+          })
+          obv.unsubscribe();
+          setTimeout(() => {
+            this.prepareDatosMangueras();
+          }, 5000);
+        });
+      })
+    })
+  }
   getChargingOrNot(cargador) {
+    let gradientBgGray = 'linear-gradient(90deg, rgba(255,255,255,1) 87%, rgba(78,80,84,1) 87%, rgba(78,80,84,1) 100%)'
+    let gradientBgBlue = 'linear-gradient(90deg, rgba(255,255,255,1) 87%, rgba(48,48,148,1) 87%, rgba(48,48,148,1) 100%)'
+    let gradientBgGreen = 'linear-gradient(90deg, rgba(255,255,255,1) 87%, rgba(133,175,55,1) 87%, rgba(133,175,55,1) 100%)';
     if (this.ultimosManguera.length == 0) {
-      return;
+      return { background: '#white', color: '#4e5054', state: true };
     }
 
     let item1 = this.ultimosManguera.find(x => { return x.mangueras_id == cargador.mangueras[0].id });
     let item2 = this.ultimosManguera.find(x => { return x.mangueras_id == cargador.mangueras[1].id });
+
+    let currentCharging = this.userTransactions.find(x => { return x.estado_actual == 0 });
+    //ninguna manguera esta cargando
     if (item1.estado != "Charging" && item2.estado != "Charging") {
-      return false;
+
+      return { background: gradientBgGreen, color: '#4e5054', state: true };
+
     } else {
-      return true;
+      if (this.usuarioNormal) {
+        //una manguera esta cargando, tengo qe chequear si es el cargador que yo estoy ocupando
+        //ver si hay algun dato que este cargando
+        if (currentCharging) {
+          //comparar si el dato que esta cargando es una manguera de mi cargador, o no
+          //si es de mi cargador devuelvo el cargando
+          if (currentCharging.mangueras_id == cargador.mangueras[0].id || currentCharging.mangueras_id == cargador.mangueras[1].id) {
+            return { background: gradientBgBlue, color: '#4e5054', state: true };
+            return { background: '#303094', color: 'white', state: true };
+            //si no es mio, pero esta cargando, devuelvo el no disponible
+          } else {
+            return { background: gradientBgGray, color: '#4e5054', state: false };
+
+          }
+        } else {
+          return { background: gradientBgGray, color: '#4e5054', state: false };
+        }
+      } else {
+        return { background: gradientBgGray, color: '#4e5054', state: true };
+
+      }
     }
 
   }
@@ -110,7 +264,7 @@ export class UserActionSelectionPage implements OnInit {
       }
     });
   }
-  logout(){
+  logout() {
     this.auth.logout();
     this.router.navigateByUrl('');
   }
@@ -118,11 +272,18 @@ export class UserActionSelectionPage implements OnInit {
     this.barcodeScanner.scan().then(barcodeData => {
       console.log('Barcode data', barcodeData);
       this.scannedData = barcodeData;
-      if(this.scannedData.user == "colbun@colbun.cl" && this.scannedData.password == "123456"){
-        this.router.navigate(['informacion-cargador'])
+      let cargador = this.cargadores.find(x => { return x.id == this.scannedData.text });
+      if (cargador) {
+        this.router.navigate(['/informacion-cargador'], {
+          state: {
+            data: cargador
+          }
+        });
+      } else {
+        //ver que hacer cuando no ahya un id cargador en el qr
       }
-     }).catch(err => {
-         console.log('Error', err);
-     });
+    }).catch(err => {
+      console.log('Error', err);
+    });
   }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Route, Router, RouteReuseStrategy } from '@angular/router';
 import { CargadorServiceService } from '../../services/cargador-service.service';
 import { AuthService } from '../../services/auth.service';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-informacion-cargador',
@@ -17,99 +18,85 @@ export class InformacionCargadorPage implements OnInit {
   btnCargaActualActivated;
   is24Hours;
   textoBotonCargaActual;
+  currentModal = null;
+
   constructor(
-    private cargadorService:CargadorServiceService,
-    private auth:AuthService,
+    private cargadorService: CargadorServiceService,
+    private auth: AuthService,
+    private router: Router,
+    private modalController: ModalController,
   ) { }
 
   ngOnInit() {
     this.cargador = history.state.data;
     let token = localStorage.getItem('access_token');
     let tknInfo = this.auth.jwtHelper.decodeToken(token);
-    console.log('tokeninfo informacion',tknInfo);
-    
+    console.log('cargador', this.cargador);
+
     this.getAlarmasMangueras();
   }
   getAlarmasMangueras() {
-    this.ovb = this.cargadorService.ultimasalarmasMangueras({ manguera_uno: this.cargador.mangueras[0].id, manguera_dos: this.cargador.mangueras[1].id }).subscribe(res => {
+    let manguerasIds = [];
+    this.cargador.mangueras.forEach(x => {
+      manguerasIds.push(x.id)
+    })
+    this.ovb = this.cargadorService.ultimasalarmasMangueras({ mangueras_ids: manguerasIds }).subscribe(res => {
       this.alarmasManguera = res;
-
-      if (this.alarmasManguera[0] && this.alarmasManguera[1]) {
+      if (res.length > 0) {
         this.cargador.mangueras.forEach(x => {
           let tempma = this.alarmasManguera.find(y => { return y.mangueras_id == x.id });
           x.estadoParaColor = tempma.estado;
+          x.estadoCarga = tempma.estado
         })
-        let m1 = this.cargador.mangueras.find(x => { return x.numero_manguera == 1 });
-        let m2 = this.cargador.mangueras.find(x => { return x.numero_manguera == 2 });
-        let m11 = this.alarmasManguera.find(x => { return x.mangueras_id == m1.id });
-        let m22 = this.alarmasManguera.find(x => { return x.mangueras_id == m2.id });
+        let noneCharging = false;
+        //check if none are charging
+        let temp = this.cargador.mangueras.find(y => { return y.estadoCarga == "Charging" });
+        if (temp == null) {
+          noneCharging = true;
+        }
 
-        if (m11.estado == "Charging" && m22.estado == "Charging") {
-          this.cargadorImg = "/assets/img/cargador-azul-azul.png";
+        if (noneCharging) {
+          this.cargador.mangueras.forEach(x => {
+            this.cargadorImg = "/assets/img/cargador-verde-verde.png";
+            this.btnCargaActualClass = "boton-carga-actual";
+            this.btnCargaActualActivated = true;
+            this.is24Hours = true;
+            this.textoBotonCargaActual = 'Última Carga';
+            x.whole_background = '#85af37';
+            x.foreground_color = 'white';
+            x.iconColor = 'assets/img/conector-' + x.tipo_conector.id + '-white.png';
+            x.botonActivado = true;
+            x.textBoton = 'Conecte manguera y presione para iniciar';
+          })
+        } else {
+
           this.btnCargaActualClass = "boton-carga-actual";
           this.btnCargaActualActivated = true;
           this.is24Hours = false;
-          this.textoBotonCargaActual = 'Carga Actual';
-          m1.whole_background = '#4a72b2';
-          m2.whole_background = '#4a72b2';
-          m1.foreground_color = 'white';
-          m2.foreground_color = 'white';
-          m1.iconColor = 'assets/img/conector-' + m1.tipo_conector.id + '-white.png';
-          m2.iconColor = 'assets/img/conector-' + m2.tipo_conector.id + '-white.png';
-          m1.botonActivado = true;
-          m2.botonActivado = true;
-        } else if (m11.estado != "Charging" && m22.estado != "Charging") {
-          this.cargadorImg = "/assets/img/cargador-verde-verde.png";
-          this.btnCargaActualClass = "boton-carga-actual";
-          this.btnCargaActualActivated = true;
-          this.is24Hours = true;
-          this.textoBotonCargaActual = 'Última Carga';
-          m1.whole_background = '#85af37';
-          m2.whole_background = '#85af37';
-          m1.foreground_color = 'white';
-          m2.foreground_color = 'white';
-          m1.iconColor = 'assets/img/conector-' + m1.tipo_conector.id + '-white.png';
-          m2.iconColor = 'assets/img/conector-' + m2.tipo_conector.id + '-white.png';
-          m1.botonActivado = true;
-          m2.botonActivado = true;
-          m1.textBoton = 'Conecte manguera y presione para iniciar';
-          m2.textBoton = 'Conecte manguera y presione para iniciar';
+          this.cargador.mangueras.forEach(x => {
+            if (x.estadoCarga == "Charging") {
+              if (x.numero_manguera == 1) {
+                this.cargadorImg = "/assets/img/cargador-verde-azul.png";
+              } else {
+                this.cargadorImg = "/assets/img/cargador-azul-verde.png";
+              }
 
-        } else if (m11.estado == "Charging" && m22.estado != "Charging") {
-          this.cargadorImg = "/assets/img/cargador-azul-verde.png";
-          this.btnCargaActualClass = "boton-carga-actual";
-          this.btnCargaActualActivated = true;
-          this.is24Hours = false;
-          this.textoBotonCargaActual = 'Carga Actual';
-          m1.whole_background = '#4a72b2';
-          m2.whole_background = 'white';
-          m1.foreground_color = 'white';
-          m2.foreground_color = '#4e5054';
-          m1.iconColor = 'assets/img/conector-' + m1.tipo_conector.id + '-white.png';
-          m2.iconColor = 'assets/img/conector-' + m2.tipo_conector.id + '.png';
-          m1.botonActivado = true;
-          m2.botonActivado = false;
-          m1.textBoton = 'Cargando';
-          m2.textBoton = 'No disponible';
+              x.whole_background = '#4a72b2';
+              x.foreground_color = 'white';
+              x.iconColor = 'assets/img/conector-' + x.tipo_conector.id + '-white.png';
+              x.botonActivado = false;
+              x.textBoton = 'Cargando';
 
-        } else if (m11.estado != "Charging" && m22.estado == "Charging") {
-          this.cargadorImg = "/assets/img/cargador-verde-azul.png";
-          this.btnCargaActualClass = "boton-carga-actual";
-          this.btnCargaActualActivated = true;
-          this.is24Hours = false;
-          this.textoBotonCargaActual = 'Carga Actual';
-          m1.whole_background = 'white';
-          m2.whole_background = '#4a72b2';
-          m1.foreground_color = '#4e5054';
-          m2.foreground_color = 'white';
-          m1.iconColor = 'assets/img/conector-' + m1.tipo_conector.id + '.png';
-          m2.iconColor = 'assets/img/conector-' + m2.tipo_conector.id + '-white.png';
-          m1.botonActivado = false;
-          m2.botonActivado = true;
-          m1.textBoton = 'No disponible';
-          m2.textBoton = 'Cargando';
-          console.log(m1,m2);
-          
+            } else {
+              x.whole_background = '#4e5054';
+              x.foreground_color = 'white';
+              x.iconColor = 'assets/img/conector-' + x.tipo_conector.id + '-white.png';
+              x.botonActivado = false;
+              x.textBoton = 'No disponible';
+
+            }
+          })
+
         }
       }
       this.ovb.unsubscribe();
@@ -119,5 +106,16 @@ export class InformacionCargadorPage implements OnInit {
       }, 5000);
     })
   }
+  MangueraClicked(manguera) {
+    this.router.navigate(['/inicio-carga'], {
+      state: {
+        manguera,
+      }
+    });
+  }
 
+  dismissModal(modal) {    
+    modal.dismiss().then(() => {
+    });
+  }
 }

@@ -14,6 +14,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { IonicStorageModule } from '@ionic/storage-angular';
 import { StorageService } from './services/storage.service';
+import { Drivers, Storage } from '@ionic/storage';
 
 export function tokenGetter() {
   return localStorage.getItem("access_token");
@@ -30,6 +31,7 @@ export function tokenGetter() {
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
+    IonicModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
@@ -37,12 +39,16 @@ export function tokenGetter() {
         disallowedRoutes: [globalApi.uri + '/auth/login']
       }
     }),
-    IonicStorageModule.forRoot(),
+    IonicStorageModule.forRoot({
+      name: '__mydb',
+      driverOrder: [Drivers.IndexedDB, Drivers.LocalStorage]
+    })
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, 
     BarcodeScanner,
     StorageService,
+    IonicStorageModule,
   ],
   bootstrap: [AppComponent],
 })

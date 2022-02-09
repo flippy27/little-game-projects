@@ -24,6 +24,10 @@ const routes: Routes = [
     path: 'informacion-cargador',
     loadChildren: () => import('./components/informacion-cargador/informacion-cargador.module').then( m => m.InformacionCargadorPageModule)
   },
+  {
+    path: 'inicio-carga',
+    loadChildren: () => import('./components/inicio-carga/inicio-carga.module').then( m => m.InicioCargaPageModule)
+  },
 ];
 
 @NgModule({
