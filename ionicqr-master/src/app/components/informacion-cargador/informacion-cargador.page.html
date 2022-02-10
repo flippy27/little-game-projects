@@ -8,6 +8,9 @@
 </ion-header>
 
 <ion-content>
+  <div style="width: 100%;height: 100%;display: flex;align-items: center;justify-content: center;" *ngIf="loading">
+    <ion-spinner name="crescent" style="width: 100px;height: 100px;"></ion-spinner>
+  </div>
   <ion-row class="ion-padding-top">
     <ion-col size="8">
 
@@ -20,14 +23,18 @@
       <ion-button style="width: 100%;" id="mapaTrigger">
         <ion-icon name="locate-outline"></ion-icon>
       </ion-button>
-      <ion-button style="width: 100%;" (click)="openDetalleCargador()">
+      <ion-button style="width: 100%;" (click)="openDetalleCargador()" *ngIf="noneCharging">
         <ion-icon name="flash-outline"></ion-icon>
       </ion-button>
     </ion-col>
   </ion-row>
+  <div style="display: flex;justify-content: center;" *ngIf="noneCharging">
+
+    <p style="font-size: 20px;color: #4e5054;">Presione el conector, para iniciar carga</p>
+  </div>
   <ion-card *ngFor="let manguera of cargador.mangueras" style="min-height: 215px;max-height: 400px;"
     [style.background-color]="manguera.whole_background" [style.color]="manguera.foreground_color"
-    (click)="MangueraClicked(manguera)">
+    (click)="MangueraClicked(manguera)" [disabled]="!manguera.botonActivado">
     <ion-card-header>
       <ion-grid>
         <ion-row style="height: 175px;">
@@ -70,7 +77,7 @@
       <ion-toolbar>
         <ion-title>Ayuda</ion-title>
         <ion-buttons slot="end">
-          <ion-button (click)="dismissModal(ayudaModal)">Close</ion-button>
+          <ion-button (click)="dismissModal(ayudaModal)">Cerrar</ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
@@ -120,7 +127,7 @@
       <ion-toolbar>
         <ion-title>Ubicación cargador</ion-title>
         <ion-buttons slot="end">
-          <ion-button (click)="dismissModal(mapaModal)">Close</ion-button>
+          <ion-button (click)="dismissModal(mapaModal)">Cerrar</ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>

@@ -278,7 +278,6 @@ export class DetalleCargadorPage implements OnInit {
     if(this.is24Hour){
       return;
     }
-    console.log('detener carga');
     
   }
   donothing(){

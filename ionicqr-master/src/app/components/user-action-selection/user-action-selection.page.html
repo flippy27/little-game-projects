@@ -25,6 +25,7 @@
       {{favoritosTxt}}
     </ion-button>
   </div>
+  
   <ion-card *ngFor="let cargador of cargadores"  style="min-height: 120px;display: flex;align-items: center;"
     [style.background]="getChargingOrNot(cargador).background">
     <ion-card-header style="display: flex;flex-direction: column;justify-content: center;padding-left: 2px;">
