@@ -15,12 +15,12 @@
       <ion-item class="color-colbun-gray">S/N : {{cargador.nombre.replaceAll('_','-')|uppercase}}</ion-item>
       <ion-item class="color-colbun-gray">Potencia máxima : {{cargador.potencia_maxima}}kW</ion-item>
     </ion-col>
-    <ion-col size="4">
+    <ion-col size="4" style="margin: auto;">
       <ion-button style="width: 100%;" id="ayudaTrigger">Ayuda</ion-button>
-      <ion-button style="width: 100%;">
+      <ion-button style="width: 100%;" id="mapaTrigger">
         <ion-icon name="locate-outline"></ion-icon>
       </ion-button>
-      <ion-button style="width: 100%;">
+      <ion-button style="width: 100%;" (click)="openDetalleCargador()">
         <ion-icon name="flash-outline"></ion-icon>
       </ion-button>
     </ion-col>
@@ -63,16 +63,72 @@
   </ion-card>
 </ion-content>
 
+<!-- AYUDA MODA -->
 <ion-modal #ayudaModal trigger="ayudaTrigger">
   <ng-template>
     <ion-header translucent>
       <ion-toolbar>
-        <ion-title>Modal Content</ion-title>
+        <ion-title>Ayuda</ion-title>
         <ion-buttons slot="end">
           <ion-button (click)="dismissModal(ayudaModal)">Close</ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
-    <ion-content>Modal Content</ion-content>
+    <ion-content>
+      <!-- LEYENDA -->
+      <ion-img src="{{cargadorImg}}" width="100%"></ion-img>
+      <ion-row>
+        <ion-col style="text-align: center;">
+          <div class="p-2 bd-highlight">
+            <p style="color:#4e5054;font-size: 20px;">Cargando</p>
+          </div>
+          <div class="">
+            <div class="leyenda-rectangulo" style="background-color: #4a72b2;display: inline-block;">
+            </div>
+          </div>
+        </ion-col>
+
+        <ion-col style="text-align: center;">
+          <div class="p-2 bd-highlight">
+            <p style="color:#4e5054;font-size: 20px;">Disponible</p>
+          </div>
+          <div class="">
+            <div class="leyenda-rectangulo" style="background-color: #85af37;display: inline-block;">
+            </div>
+          </div>
+        </ion-col>
+
+        <ion-col style="text-align: center;">
+          <div class="p-2 bd-highlight">
+            <p style="color:#4e5054;font-size: 20px;">No disponible</p>
+          </div>
+          <div>
+            <div class="leyenda-rectangulo"
+              style="background-color: #4e5054;display: inline-block; border:3px solid #4e5054">
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
+<!-- MAPA MODAL -->
+<ion-modal #mapaModal trigger="mapaTrigger">
+  <ng-template>
+    <ion-header translucent>
+      <ion-toolbar>
+        <ion-title>Ubicación cargador</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="dismissModal(mapaModal)">Close</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+
+      <agm-map [latitude]="latitud" [longitude]="longitud" [zoom]="zoom" style="height: 500px;">
+        <agm-marker [latitude]="latitud" [longitude]="longitud" [markerDraggable]="true"></agm-marker>
+      </agm-map>
+    </ion-content>
   </ng-template>
 </ion-modal>

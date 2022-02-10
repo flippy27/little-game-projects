@@ -59,4 +59,20 @@ export class CargadorServiceService {
   updateFavorito(data: any): Observable<any> {
     return this.http.post(this.uri + "/updateFavorito", data, this.options)
   }
+  datosMangueras(data): Observable<any> {
+
+    return this.http.post(this.uri + "/datosMangueras", data, this.options)
+  }
+  datosAlarmasMangueras(data): Observable<any> {
+
+    return this.http.post(this.uri + "/datosAlarmasMangueras", data, this.options)
+  }
+  datosMangueraColbun(data): Observable<any> {
+
+    return this.http.post(this.uri + "/datosMangueraColbun", data, this.options)
+
+  }
+  getEmpresa(empresa_id): Observable<any> {
+    return this.http.get(this.uri + "/empresas/" + empresa_id, this.options)
+  }
 }

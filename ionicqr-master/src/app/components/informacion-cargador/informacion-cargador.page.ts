@@ -20,6 +20,9 @@ export class InformacionCargadorPage implements OnInit {
   textoBotonCargaActual;
   currentModal = null;
 
+  latitud;
+  longitud;
+  zoom = 18;
   constructor(
     private cargadorService: CargadorServiceService,
     private auth: AuthService,
@@ -28,10 +31,13 @@ export class InformacionCargadorPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    
     this.cargador = history.state.data;
     let token = localStorage.getItem('access_token');
     let tknInfo = this.auth.jwtHelper.decodeToken(token);
-    console.log('cargador', this.cargador);
+    this.latitud = this.cargador.latitud;
+    this.longitud = this.cargador.longitud;
+
 
     this.getAlarmasMangueras();
   }
@@ -76,9 +82,9 @@ export class InformacionCargadorPage implements OnInit {
           this.cargador.mangueras.forEach(x => {
             if (x.estadoCarga == "Charging") {
               if (x.numero_manguera == 1) {
-                this.cargadorImg = "/assets/img/cargador-verde-azul.png";
-              } else {
                 this.cargadorImg = "/assets/img/cargador-azul-verde.png";
+              } else {
+                this.cargadorImg = "/assets/img/cargador-verde-azul.png";
               }
 
               x.whole_background = '#4a72b2';
@@ -118,4 +124,22 @@ export class InformacionCargadorPage implements OnInit {
     modal.dismiss().then(() => {
     });
   }
+  onMapReady(map) {
+    map.setOptions({
+      zoomControl: 'true',
+      zoomControlOptions: {
+        position: google.maps.ControlPosition.TOP_RIGHT,
+        style: google.maps.ZoomControlStyle.DEFAULT
+      }
+    });
+  }
+  openDetalleCargador(){
+    this.router.navigate(['/detalle-cargador'], {
+      state: {
+        cargadorData:this.cargador,
+        is24Hours:this.is24Hours,
+      }
+    });
+  }
+  
 }

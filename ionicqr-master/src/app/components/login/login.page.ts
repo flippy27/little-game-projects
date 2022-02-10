@@ -61,7 +61,7 @@ export class LoginPage implements OnInit {
           location.reload()
         },
         (err) => {
-          console.log(err);
+          console.error(err);
           this.errrrr = err;
           location.reload()
         }

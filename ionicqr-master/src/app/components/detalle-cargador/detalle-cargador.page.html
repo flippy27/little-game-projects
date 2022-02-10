@@ -1,0 +1,106 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button class="color-colbun-gray"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Detalles cargador</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div style="width: 100%;height: 100%;display: flex;align-items: center;justify-content: center;" *ngIf="loading">
+    <ion-spinner name="crescent" style="width: 100px;height: 100px;"></ion-spinner>
+  </div>
+
+  <div style="margin: 0 5px;" *ngIf="!loading">
+
+    <ion-row style="margin-top: 10px;">
+      <ion-col style="max-width: 120px;padding: 0;margin:0;display: flex;flex-direction: column;justify-content: center;">
+        <div style="height: 120px;">
+          <ion-img src="{{mangueraSeleccionadaConectorImg}}" style="width: 120px;height: 120px;"></ion-img>
+        </div>
+      </ion-col>
+      <ion-col class="item-box">
+        <p class="text-color box-title">Cargado</p>
+        <p class="text-color" style="font-size: 22px;">{{eair?eair:'0'}}kWh</p>
+      </ion-col>
+      <ion-col class="item-box" style="margin-left: 5px;">
+        <p class="text-color box-title">Duración carga</p>
+        <p class="text-color box-other" style="font-size: 22px;">{{timer}}</p>
+        <p class="text-color box-title">Fecha inicio</p>
+        <p class="text-color box-other">{{timerFecha}}</p>
+
+      </ion-col>
+    </ion-row>
+    <ion-row class="item-box" style="margin-top: 5px;">
+      <ion-col style="padding: 10px 0;">
+        
+          <p class="text-color box-other">Estado carga inicial</p>
+          <p class="text-color box-other" style="font-size: 22px;">{{socInicio}}%</p>
+        
+        <p class="text-color box-other">{{is24Hour?'Estado carga final':'Estado carga actual'}}</p>
+        <p class="text-color box-other" style="font-size: 22px;">{{ultimoDatoMangueraSeleccionada.soc}}%</p>
+
+      </ion-col>
+      <ion-col style="display:flex;flex-direction: column;justify-content: center;">
+        <p class="text-color box-title">Cargado en esta sesión</p>
+        <p class="text-color box-other" style="font-size: 30px;">{{ultimoDatoMangueraSeleccionada.soc - socInicio}}%</p>
+      </ion-col>
+
+    </ion-row>
+  </div>
+  <div style="display: flex;align-items: center;margin-top: 40px;margin: 20px 20px 0px 20px;">
+    <ion-button id="{{!is24Hour?'':'resumenTrigger'}}" class="btn-detener-detalle" (click)="detenerCarga()">
+      {{textoDetenerCarga}}
+    </ion-button>
+  </div>
+</ion-content>
+
+<ion-modal #resumenModal trigger="resumenTrigger">
+  <ng-template>
+    <ion-header translucent>
+      <ion-toolbar>
+        <ion-title>Resumen carga</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="dismissModal(resumenModal)">Close</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <div style="padding: 20px 20px;">
+
+        <ul>
+          <li class="text-color">
+            <p class="text-color ft-size">Conector : {{ultimaData.conector.numero_manguera}}</p>
+          </li>
+          <li class="text-color">
+            <p class="text-color ft-size">Tipo Conector : {{ultimaData.conector.tipo_conector.nombre}}</p>
+          </li>
+          <li class="text-color">
+            <p class="text-color ft-size">Soc Inicio : {{ultimaData.socInicial}}%</p>
+          </li>
+          <li class="text-color">
+            <p class="text-color ft-size">Soc Fin: {{ultimaData.soc}}%</p>
+          </li>
+          <li class="text-color">
+            <p class="text-color ft-size">Porcentaje Cargado : {{ultimaData.soc - ultimaData.socInicial}}%</p>
+          </li>
+          <li class="text-color">
+            <p class="text-color ft-size">Carga : {{ultimaData.energyActiveImportRegister}} kWh</p>
+          </li>
+          <li class="text-color">
+            <p class="text-color ft-size">Duracion Carga : {{ultimaData.tiempo}}</p>
+          </li>
+          <!--     <p class="text-color">  ✓ Tipo de conector : DC | CHAdeMO</p>
+                <p class="text-color">  ✓ Estado : Disponible</p>
+            <li class="text-color">
+                <p class="text-color">Conector : 2</p>
+            </li>
+                <p class="text-color">  ✓ Tipo de conector : DC | CCS Tipo 1</p>
+            
+                <p class="text-color">  ✓ Estado : Cargando</p> -->
+        </ul>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>

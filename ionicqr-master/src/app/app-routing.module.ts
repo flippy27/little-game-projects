@@ -28,6 +28,10 @@ const routes: Routes = [
     path: 'inicio-carga',
     loadChildren: () => import('./components/inicio-carga/inicio-carga.module').then( m => m.InicioCargaPageModule)
   },
+  {
+    path: 'detalle-cargador',
+    loadChildren: () => import('./components/detalle-cargador/detalle-cargador.module').then( m => m.DetalleCargadorPageModule)
+  },
 ];
 
 @NgModule({

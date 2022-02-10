@@ -22,13 +22,12 @@ export class QrScanPage implements OnInit {
   }
   scanBarcode() {
     this.barcodeScanner.scan().then(barcodeData => {
-      console.log('Barcode data', barcodeData);
       this.scannedData = barcodeData;
       if(this.scannedData.user == "colbun@colbun.cl" && this.scannedData.password == "123456"){
         this.router.navigate(['informacion-cargador'])
       }
      }).catch(err => {
-         console.log('Error', err);
+         console.error('Error', err);
      });
   }
 

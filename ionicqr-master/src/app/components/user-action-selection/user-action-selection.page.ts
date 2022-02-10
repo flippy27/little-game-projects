@@ -61,11 +61,10 @@ export class UserActionSelectionPage implements OnInit {
     this.cargadoresFavoritos = [];
     this.cargadorService.getFavoritosByUserIDAndType({ usuarios_id: this.user_id, tipos_favoritos_id: 1 }).subscribe(x => {
       this.favoritos = x;
-      console.log('favoritos',this.favoritos);
-      
+
       this.cargadores.forEach(y => {
         let t = this.favoritos.find(z => { return z.id_valor_favorito == y.id && z.habilitado == 1 });
-        
+
         if (t != null) {
           this.cargadoresFavoritos.push(y);
         }
@@ -142,12 +141,13 @@ export class UserActionSelectionPage implements OnInit {
   prepareDatosMangueras() {
     let temparr = [];
     let manguerasIds = [];
+
     this.cargadores.forEach(x => {
       x.mangueras.forEach(y => {
         manguerasIds.push(y.id)
       })
     })
-    
+
 
     temparr.push(this.cargadorService.ultimasalarmasMangueras({ mangueras_ids: manguerasIds }));
 
@@ -159,8 +159,11 @@ export class UserActionSelectionPage implements OnInit {
     let obv = forkJoin(arr).subscribe(res => {
       res.forEach((x: any) => {
         x.forEach(y => {
-          this.ultimosManguera.push(y);
+          if (y != null) {
+            this.ultimosManguera.push(y);
+          }
         })
+
       })
       obv.unsubscribe();
       setTimeout(() => {
@@ -172,10 +175,11 @@ export class UserActionSelectionPage implements OnInit {
   getDatosMangueraAdminUser(arr) {
     let obv = forkJoin(arr).subscribe(res => {
       this.ultimosManguera = [];
-
       res.forEach((x: any) => {
         x.forEach(y => {
-          this.ultimosManguera.push(y);
+          if (y != null) {
+            this.ultimosManguera.push(y);
+          }
         })
       })
       obv.unsubscribe();
@@ -223,9 +227,11 @@ export class UserActionSelectionPage implements OnInit {
       return { background: '#white', color: '#4e5054', state: true };
     }
 
-    let item1 = this.ultimosManguera.find(x => { return x.mangueras_id == cargador.mangueras[0].id });
-    let item2 = this.ultimosManguera.find(x => { return x.mangueras_id == cargador.mangueras[1].id });
-
+    let item1 = this.ultimosManguera.find(x => { return x.mangueras_id == cargador.mangueras[0].id && x != null });
+    let item2 = this.ultimosManguera.find(x => { return x.mangueras_id == cargador.mangueras[1].id && x != null });
+    if(item1 == null && item2 == null){
+      return { background: '#white', color: '#4e5054', state: true };
+    }
     let currentCharging = this.userTransactions.find(x => { return x.estado_actual == 0 });
     //ninguna manguera esta cargando
     if (item1.estado != "Charging" && item2.estado != "Charging") {
@@ -270,7 +276,6 @@ export class UserActionSelectionPage implements OnInit {
   }
   scanBarcode() {
     this.barcodeScanner.scan().then(barcodeData => {
-      console.log('Barcode data', barcodeData);
       this.scannedData = barcodeData;
       let cargador = this.cargadores.find(x => { return x.id == this.scannedData.text });
       if (cargador) {
@@ -283,7 +288,7 @@ export class UserActionSelectionPage implements OnInit {
         //ver que hacer cuando no ahya un id cargador en el qr
       }
     }).catch(err => {
-      console.log('Error', err);
+      console.error('Error', err);
     });
   }
 }

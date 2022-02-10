@@ -7,13 +7,18 @@ import { IonicModule } from '@ionic/angular';
 import { InformacionCargadorPageRoutingModule } from './informacion-cargador-routing.module';
 
 import { InformacionCargadorPage } from './informacion-cargador.page';
+import { AgmCoreModule } from '@agm/core';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    InformacionCargadorPageRoutingModule
+    InformacionCargadorPageRoutingModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyDouJncyRWt29-PSe_RTjKXOsFeOOLJDmM',
+      libraries: ['places']
+  }),
   ],
   declarations: [InformacionCargadorPage]
 })

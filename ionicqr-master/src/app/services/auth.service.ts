@@ -11,7 +11,7 @@ import { StorageService } from './storage.service';
 })
 export class AuthService {
   uri: string = globalApi.uri;
-  
+  empresa;
   public token: any;
   public options: any;
   public header: any;
@@ -68,4 +68,11 @@ export class AuthService {
     this.options = { headers: this.header };
     return this.http.get(this.uri + "/rolesVistas", this.options);
   }
+  empresaAccess() {
+    const token = localStorage.getItem('access_token');
+    const tokenPayload = this.jwtHelper.decodeToken(token);
+
+    this.empresa = tokenPayload.empresas_id;
+    return this.empresa
+}
 }
