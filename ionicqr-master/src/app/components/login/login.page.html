@@ -1,37 +1,58 @@
-<ion-header>
+<!-- <ion-header>
   <ion-toolbar>
     <ion-title>login</ion-title>
   </ion-toolbar>
-</ion-header>
+</ion-header> -->
 
 <ion-content class="auth-form">
-  
-  <form [formGroup]="loginForm" (ngSubmit)="submit(loginForm.value)" style="display:flex;flex-direction: column;align-items: center; justify-content: center;height: 100%;">
-  
-    <ion-list>
-      <ion-item>
-        <ion-label position="stacked">Email</ion-label>
-        <ion-input formControlName="email" type="text">
-        </ion-input>
-      </ion-item>
-  
-  
-      <ion-item>
-        <ion-label position="stacked">Password</ion-label>
-        <ion-input formControlName="password" type="password">
-        </ion-input>
-      </ion-item>
-  
-    </ion-list>
-  
-    <ion-row class="signin">
-      <ion-col>
-        <ion-button type="submit" color="primary" shape="full" expand="block">Sign In</ion-button>
-      </ion-col>
-    </ion-row>
-  
-  </form>
-  <ion-label>{{tknInfo|json}}</ion-label>
-  <ion-label>{{errrrr|json}}</ion-label>
-  
+  <ion-row>
+    <div style="display: flex;justify-content: center;width: 100%;margin-top: 20px;">
+      <ion-img src="../../../assets/img/colbun-gris.png" style="width: 300px;"></ion-img>
+    </div>
+  </ion-row>
+  <ion-row style="display: flex;align-items: center;" class="form-height">
+    <form [formGroup]="loginForm" (ngSubmit)="submit(loginForm.value)"
+      style="display:flex;flex-direction: column;align-items: center; justify-content: center;height: 100%;">
+      <div style="padding: 0 20px ;">
+        <div style="display: flex;flex-direction: column;align-items: center;">
+          <p style="color: #4e5054;font-weight: bold;">Ingreso a la Plataforma de Gestión
+            de Carga</p>
+
+        </div>
+        <div style="display: flex;flex-direction: column;align-items: center;">
+          <p style="color: #4e5054;">Bienvenido/a a la Plataforma de Gestión de Carga, ingrese con
+            sus datos</p>
+        </div>
+        <ion-list>
+          <ion-item>
+            <ion-label position="stacked">Email</ion-label>
+            <ion-input formControlName="email" type="text;">
+            </ion-input>
+          </ion-item>
+
+
+          <ion-item>
+            <ion-label position="stacked">Contraseña</ion-label>
+            <ion-input formControlName="password" type="password" class="inputs">
+            </ion-input>
+          </ion-item>
+
+        </ion-list>
+
+        <ion-row class="signin">
+          <ion-col>
+            <ion-button type="submit" class="botonLogin" shape="full" expand="block">Ingresar <ion-icon
+                name="chevron-forward-outline"></ion-icon>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <ion-button fill="clear" class="botonRegistro" shape="full" expand="block" (click)="registroUsuario()">Registro
+        usuario</ion-button>
+    </form>
+  </ion-row>
+  <!-- <ion-label>{{tknInfo|json}}</ion-label>
+  <ion-label>{{errrrr|json}}</ion-label> -->
+
 </ion-content>

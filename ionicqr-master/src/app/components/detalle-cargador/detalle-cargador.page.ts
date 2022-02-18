@@ -4,6 +4,10 @@ import * as moment from 'moment-timezone';
 import { GlobalFunctionsService } from '../../services/global-functions.service';
 import { AddSubZone } from '../interfaces/enums/addSubZone.enum';
 import { ReturnFormat } from '../interfaces/enums/returnFormat.enum';
+import * as am4core from "@amcharts/amcharts4/core";
+import * as am4charts from "@amcharts/amcharts4/charts";
+import am4themes_animated from "@amcharts/amcharts4/themes/animated";
+import am4lang_es_ES from "@amcharts/amcharts4/lang/es_ES";
 
 @Component({
   selector: 'app-detalle-cargador',
@@ -217,7 +221,8 @@ export class DetalleCargadorPage implements OnInit {
               soc: this.ultimoDatoMangueraSeleccionada.soc,
               socInicial: this.socInicio,
             }
-            
+            this.creaChartUnico(newValOne, this.firstTime);
+
             if(this.ultimaData.conector.estadoCarga != "Charging"){
               this.is24Hour = true;
             }
@@ -281,6 +286,91 @@ export class DetalleCargadorPage implements OnInit {
     
   }
   donothing(){
+
+  }
+  creaChartUnico(source, reload) {
+
+
+    if (!reload) {
+      this.chart.data = source;
+      return;
+    }
+    let nombre;
+
+    const chart = am4core.create("chartdiv", am4charts.XYChart);
+    chart.language.locale = am4lang_es_ES;
+
+    const title = chart.titles.create();
+    title.text = "";
+    title.fontSize = 25;
+    title.marginBottom = 30;
+    chart.data = source;
+    chart.colors.step = 2; // Increase contrast by taking evey second color
+
+    // Create axes
+    const dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+    dateAxis.renderer.grid.template.location = 0;
+    dateAxis.baseInterval = {
+      "timeUnit": "second",
+      "count": 1
+    };
+    dateAxis.strictMinMax = true;
+    function createAxisAndSeries(field, name, opposite, bullet, max) {
+
+      const valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+      let series;
+      series = chart.series.push(new am4charts.LineSeries());
+      series.dataFields.valueY = field;
+      series.dataFields.dateX = "fecha_grafico";
+
+      series.strokeWidth = 1;
+      series.yAxis = valueAxis;
+      series.name = name;
+      series.tooltipText = "{name}: \n [bold]{valueY}[/]";
+      valueAxis.renderer.line.strokeOpacity = 1;
+      valueAxis.renderer.line.strokeWidth = 2;
+      valueAxis.renderer.line.stroke = series.stroke;
+      valueAxis.renderer.labels.template.fill = series.stroke;
+      valueAxis.renderer.opposite = opposite;
+      valueAxis.renderer.grid.template.disabled = true;
+      // valueAxis.tooltip.disabled = true;
+
+      const scrollbarX = new am4charts.XYChartScrollbar();
+      scrollbarX.series.push(series);
+      chart.scrollbarX = scrollbarX;
+
+      series.strokeOpacity = 1;
+      series.fillOpacity = 0.2;
+      series.tooltip.getFillFromObject = false;
+      series.tooltip.background.fill = am4core.color("#4e5054");
+      //series.fill = pattern;
+      series.tooltip.autoTextColor = false;
+      series.tooltip.label.fill = am4core.color("white");
+
+
+    }
+
+    createAxisAndSeries("valor", nombre, false, "circle", "");
+
+    // Add legend
+    chart.legend = new am4charts.Legend();
+    chart.legend.useDefaultMarker = true;
+
+    // Add cursor
+    chart.cursor = new am4charts.XYCursor();
+
+    const watermark = new am4core.Image();
+    watermark.href = "/assets/img/dhemax_chico.svg";
+    chart.plotContainer.children.push(watermark);
+    watermark.align = "right";
+    watermark.valign = "bottom";
+    watermark.opacity = 0.2;
+    watermark.marginRight = 10;
+    watermark.marginBottom = 5;
+    watermark.height = 120;
+    watermark.width = 120;
+
+    this.chart = chart;
 
   }
 }

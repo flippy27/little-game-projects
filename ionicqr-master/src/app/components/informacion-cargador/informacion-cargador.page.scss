@@ -1,4 +1,14 @@
 .leyenda-rectangulo {
-    width: 70px;
-    height: 30px;
-  }
+  width: 70px;
+  height: 30px;
+}
+.mapaContent {
+  --overflow: hidden;
+}
+
+/* .scroll {
+  height: 100%;
+} */
+.mapdiv{
+  height: -webkit-calc(100vh - 80px);
+}

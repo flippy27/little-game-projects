@@ -15,14 +15,21 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { IonicStorageModule } from '@ionic/storage-angular';
 import { StorageService } from './services/storage.service';
 import { Drivers, Storage } from '@ionic/storage';
+import { ListaCargadoresComponent } from './components/lista-cargadores/lista-cargadores.component';
 
 export function tokenGetter() {
   return localStorage.getItem("access_token");
 }
 
 @NgModule({
-  declarations: [AppComponent],
-  entryComponents: [],
+  declarations: [
+    AppComponent, 
+    ListaCargadoresComponent,
+  ],
+  entryComponents: [
+    ListaCargadoresComponent,
+
+  ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
@@ -46,7 +53,7 @@ export function tokenGetter() {
 
   ],
   providers: [
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, 
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     BarcodeScanner,
     StorageService,
     IonicStorageModule,

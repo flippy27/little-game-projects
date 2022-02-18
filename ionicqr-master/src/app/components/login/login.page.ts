@@ -30,8 +30,8 @@ export class LoginPage implements OnInit {
   ngOnInit() {
 
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]],
-      password: ['', Validators.required]
+      email: ['user_colbun@dhemax.cl', [Validators.required, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]],
+      password: ['colbun.2021', Validators.required]
     });
     if (this.auth.loggedIn()) {
 
@@ -49,7 +49,7 @@ export class LoginPage implements OnInit {
     //this.reloading = true; // Para esconder el cuadro de login, ya que por alguna razon, se queda pegado mientras recarga ¯\_(ツ)_/¯
 
     //this.mostrarLoading();
-    user.email = user.email.toLowerCase();
+    user.email = user.email.toLowerCase().trim();
     this.auth.login(user.email, user.password)
       .pipe(first())
       .subscribe(
@@ -77,5 +77,7 @@ export class LoginPage implements OnInit {
     
     this.router.navigate(['/user-action-selection']);
   }
-
+  registroUsuario(){
+    
+  }
 }

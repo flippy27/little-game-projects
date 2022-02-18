@@ -15,29 +15,36 @@
   <div style="margin: 0 5px;" *ngIf="!loading">
 
     <ion-row style="margin-top: 10px;">
-      <ion-col style="max-width: 120px;padding: 0;margin:0;display: flex;flex-direction: column;justify-content: center;">
-        <div style="height: 120px;">
+      <ion-col style="padding: 0;margin:0;display: flex;flex-direction: column;justify-content: center;" size="6">
+        <div style="height: 120px;display: flex;justify-content: center;">
           <ion-img src="{{mangueraSeleccionadaConectorImg}}" style="width: 120px;height: 120px;"></ion-img>
         </div>
       </ion-col>
-      <ion-col class="item-box">
+      <ion-col class="item-box" size="6">
         <p class="text-color box-title">Cargado</p>
         <p class="text-color" style="font-size: 22px;">{{eair?eair:'0'}}kWh</p>
       </ion-col>
-      <ion-col class="item-box" style="margin-left: 5px;">
-        <p class="text-color box-title">Duración carga</p>
-        <p class="text-color box-other" style="font-size: 22px;">{{timer}}</p>
-        <p class="text-color box-title">Fecha inicio</p>
-        <p class="text-color box-other">{{timerFecha}}</p>
-
+    </ion-row>
+    <ion-row>
+      <ion-col class="item-box" style="margin-top: 5px;">
+        <ion-row>
+          <ion-col>
+            <p class="text-color box-title" style="font-size: 22px;">Duración carga</p>
+            <p class="text-color box-other" style="font-size: 22px;">{{timer}}</p>
+          </ion-col>
+          <ion-col style="display: flex;align-items: center;flex-direction: column;justify-content: center;">
+            <p class="text-color box-title" style="font-size: 22px;">Fecha inicio</p>
+            <p class="text-color box-other">{{timerFecha}}</p>
+          </ion-col>
+        </ion-row>
       </ion-col>
     </ion-row>
     <ion-row class="item-box" style="margin-top: 5px;">
       <ion-col style="padding: 10px 0;">
-        
-          <p class="text-color box-other">Estado carga inicial</p>
-          <p class="text-color box-other" style="font-size: 22px;">{{socInicio}}%</p>
-        
+
+        <p class="text-color box-other">Estado carga inicial</p>
+        <p class="text-color box-other" style="font-size: 22px;">{{socInicio}}%</p>
+
         <p class="text-color box-other">{{is24Hour?'Estado carga final':'Estado carga actual'}}</p>
         <p class="text-color box-other" style="font-size: 22px;">{{ultimoDatoMangueraSeleccionada.soc}}%</p>
 
@@ -48,6 +55,9 @@
       </ion-col>
 
     </ion-row>
+  </div>
+  <div style="height: 300px;">
+    <div id="chartdiv" class="chartdiv" style="flex:1;height: 300px;"></div>
   </div>
   <div style="display: flex;align-items: center;margin-top: 40px;margin: 20px 20px 0px 20px;">
     <ion-button id="{{!is24Hour?'':'resumenTrigger'}}" class="btn-detener-detalle" (click)="detenerCarga()">

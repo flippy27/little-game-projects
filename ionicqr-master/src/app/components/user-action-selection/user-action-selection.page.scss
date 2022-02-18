@@ -1,27 +1,59 @@
-.boton-cargador{
-    --ion-background-color: #ff3700;
+.boton-cargador {
+  --ion-background-color: #ff3700;
 }
-.background-tile{
-    --background: linear-gradient(90deg, rgba(255,255,255,1) 87%, rgba(133,175,55,1) 87%, rgba(133,175,55,1) 100%);
-    border: 2px solid #4e5054;
-    .ion-card{
-        --color:#4e5054;
-    }
-    .ion-sub{
-        --color:#4e5054;
-    }
+.background-tile {
+  --background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 1) 87%,
+    rgba(133, 175, 55, 1) 87%,
+    rgba(133, 175, 55, 1) 100%
+  );
+  border: 2px solid #4e5054;
+  .ion-card {
+    --color: #4e5054;
+  }
+  .ion-sub {
+    --color: #4e5054;
+  }
 }
-.div-boton-escanear{
-    position: absolute;
-    bottom: 60px;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: center;
-    .boton-escanear{
-        font-size: 16px;
-        width: 50%;
-        
-    
-    }
+.div-boton-escanear {
+  position: fixed;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  height: auto;
 }
+.div-boton-escanear {
+  position: absolute;
+  bottom: 7%;  
+}
+.boton-escanear {
+  font-size: 16px;
+  width: 50%;
+}
+
+.mapdiv {
+  height: -webkit-calc(100vh - 60px);
+}
+.div-boton-centrar-contenedor{
+  position: absolute;
+  top: 50%;  
+  left:85%;
+  z-index: 10;
+  border: 2px solid white;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+ 
+  background-color: white;
+  box-shadow: 1px 1px #c1c1c1;
+}
+.div-boton-centrar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+
+}
+

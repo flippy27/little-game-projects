@@ -32,6 +32,7 @@ const routes: Routes = [
     path: 'detalle-cargador',
     loadChildren: () => import('./components/detalle-cargador/detalle-cargador.module').then( m => m.DetalleCargadorPageModule)
   },
+
 ];
 
 @NgModule({

@@ -21,16 +21,15 @@
     <ion-col size="4" style="margin: auto;">
       <ion-button style="width: 100%;" id="ayudaTrigger">Ayuda</ion-button>
       <ion-button style="width: 100%;" id="mapaTrigger">
-        <ion-icon name="locate-outline"></ion-icon>
+        <ion-icon name="location-outline"></ion-icon>
       </ion-button>
       <ion-button style="width: 100%;" (click)="openDetalleCargador()" *ngIf="noneCharging">
         <ion-icon name="flash-outline"></ion-icon>
       </ion-button>
     </ion-col>
   </ion-row>
-  <div style="display: flex;justify-content: center;" *ngIf="noneCharging">
-
-    <p style="font-size: 20px;color: #4e5054;">Presione el conector, para iniciar carga</p>
+  <div style="display: flex;justify-content: center;" >
+    <p style="font-size: 20px;color: #4e5054;">{{noneCharging?'Presione el conector, para iniciar carga':'Presione conector para detalle'}}</p>
   </div>
   <ion-card *ngFor="let manguera of cargador.mangueras" style="min-height: 215px;max-height: 400px;"
     [style.background-color]="manguera.whole_background" [style.color]="manguera.foreground_color"
@@ -53,10 +52,10 @@
             </ion-row>
             <ion-row style="margin-top: 20px;">
               <ion-col>
-                <ion-text style="font-size: 20px;color: black;font-weight: 600;">Disponible</ion-text>
+                <ion-text style="font-size: 20px;color: #4e5054;font-weight: 600;" *ngIf="manguera.estadoCarga != 'Charging'">Disponible</ion-text>
                 <br>
-                <ion-text style="font-size: 16px;color: black;">CLP 250/kWh</ion-text>
-              </ion-col>
+<!--                 <ion-text style="font-size: 16px;color: black;">CLP 250/kWh</ion-text>
+ -->              </ion-col>
             </ion-row>
           </ion-col>
           <ion-col size="4" style="display:flex;align-items: center;justify-content: center;">
@@ -83,7 +82,9 @@
     </ion-header>
     <ion-content>
       <!-- LEYENDA -->
-      <ion-img src="{{cargadorImg}}" width="100%"></ion-img>
+      <div style="display: flex;justify-content: center;margin-top: 20px;">
+        <ion-img src="{{cargadorImg}}" style="width: 250px;"></ion-img>
+      </div>
       <ion-row>
         <ion-col style="text-align: center;">
           <div class="p-2 bd-highlight">
@@ -116,6 +117,16 @@
           </div>
         </ion-col>
       </ion-row>
+      <ion-row style="margin-top: 20px;">
+        <ion-col style="display: flex;justify-content: center;align-items: center;flex-direction: column;">
+          <p style="color: #4e5054;font-size: 22px;margin: 0;">Conector 1:</p>
+          <p style="color: #4e5054;font-size: 22px;">{{cargador.mangueras[0].tipo_conector.nombre}}</p>
+        </ion-col>
+        <ion-col style="display: flex;justify-content: center;align-items: center;flex-direction: column;">
+          <p style="color: #4e5054;font-size: 22px;margin: 0;">Conector 2:</p>
+          <p style="color: #4e5054;font-size: 22px;">{{cargador.mangueras[1].tipo_conector.nombre}}</p>
+        </ion-col>
+      </ion-row>
     </ion-content>
   </ng-template>
 </ion-modal>
@@ -131,11 +142,13 @@
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
-    <ion-content>
+    <ion-content class="mapaContent">
+      <div style="margin: 10px;border: 4px solid #4e5054;border-radius: 6px;" class="mapdiv">
 
-      <agm-map [latitude]="latitud" [longitude]="longitud" [zoom]="zoom" style="height: 500px;">
-        <agm-marker [latitude]="latitud" [longitude]="longitud" [markerDraggable]="true"></agm-marker>
-      </agm-map>
+        <agm-map [latitude]="latitud" [longitude]="longitud" [zoom]="zoom" style="height: 100%;">
+          <agm-marker [latitude]="latitud" [longitude]="longitud" [markerDraggable]="false"></agm-marker>
+        </agm-map>
+      </div>
     </ion-content>
   </ng-template>
 </ion-modal>

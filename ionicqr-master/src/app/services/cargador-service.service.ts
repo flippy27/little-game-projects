@@ -68,11 +68,13 @@ export class CargadorServiceService {
     return this.http.post(this.uri + "/datosAlarmasMangueras", data, this.options)
   }
   datosMangueraColbun(data): Observable<any> {
-
     return this.http.post(this.uri + "/datosMangueraColbun", data, this.options)
-
+  }
+  fullCargadoresPorEmpresa(data): Observable<any> {
+    return this.http.post(this.uri + "/fullCargadoresPorEmpresa", data, this.options)
   }
   getEmpresa(empresa_id): Observable<any> {
     return this.http.get(this.uri + "/empresas/" + empresa_id, this.options)
   }
+  
 }
