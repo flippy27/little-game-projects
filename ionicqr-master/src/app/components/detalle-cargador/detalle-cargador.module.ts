@@ -7,14 +7,18 @@ import { IonicModule } from '@ionic/angular';
 import { DetalleCargadorPageRoutingModule } from './detalle-cargador-routing.module';
 
 import { DetalleCargadorPage } from './detalle-cargador.page';
+import { SharedModuleModule } from '../../shared-module/shared-module.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    DetalleCargadorPageRoutingModule
+    DetalleCargadorPageRoutingModule,
+    SharedModuleModule,
   ],
-  declarations: [DetalleCargadorPage]
+  declarations: [
+    DetalleCargadorPage,
+  ]
 })
 export class DetalleCargadorPageModule {}

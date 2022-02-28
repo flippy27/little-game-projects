@@ -150,6 +150,7 @@ export class ListaCargadoresComponent implements OnInit {
 
   }
   seleccionCargadores(data) {
+    this.modalCtrl.dismiss();
     this.router.navigate(['/informacion-cargador'], {
       state: {
         data

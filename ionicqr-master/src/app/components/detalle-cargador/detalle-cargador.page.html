@@ -3,8 +3,8 @@
     <ion-buttons slot="start">
       <ion-back-button class="color-colbun-gray"></ion-back-button>
     </ion-buttons>
-    <ion-title>Detalles cargador</ion-title>
-  </ion-toolbar>
+    <ion-title>Detalle carga</ion-title>
+    <logo-colbun slot="end"></logo-colbun>  </ion-toolbar>
 </ion-header>
 
 <ion-content>
@@ -22,7 +22,7 @@
       </ion-col>
       <ion-col class="item-box" size="6">
         <p class="text-color box-title">Cargado</p>
-        <p class="text-color" style="font-size: 22px;">{{eair?eair:'0'}}kWh</p>
+        <p class="text-color" style="font-size: 22px;font-weight: bold;">{{eair?eair:'0'}}kWh</p>
       </ion-col>
     </ion-row>
     <ion-row>
@@ -43,15 +43,15 @@
       <ion-col style="padding: 10px 0;">
 
         <p class="text-color box-other">Estado carga inicial</p>
-        <p class="text-color box-other" style="font-size: 22px;">{{socInicio}}%</p>
+        <p class="text-color box-other" style="font-size: 22px;font-weight: bold;">{{socInicio}}%</p>
 
         <p class="text-color box-other">{{is24Hour?'Estado carga final':'Estado carga actual'}}</p>
-        <p class="text-color box-other" style="font-size: 22px;">{{ultimoDatoMangueraSeleccionada.soc}}%</p>
+        <p class="text-color box-other" style="font-size: 22px;font-weight: bold;">{{ultimoDatoMangueraSeleccionada.soc}}%</p>
 
       </ion-col>
       <ion-col style="display:flex;flex-direction: column;justify-content: center;">
         <p class="text-color box-title">Cargado en esta sesión</p>
-        <p class="text-color box-other" style="font-size: 30px;">{{ultimoDatoMangueraSeleccionada.soc - socInicio}}%</p>
+        <p class="text-color box-other" style="font-size: 30px;font-weight: bold;">{{ultimoDatoMangueraSeleccionada.soc - socInicio}}%</p>
       </ion-col>
 
     </ion-row>

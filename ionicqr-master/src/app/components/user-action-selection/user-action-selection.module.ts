@@ -8,6 +8,8 @@ import { UserActionSelectionPageRoutingModule } from './user-action-selection-ro
 
 import { UserActionSelectionPage } from './user-action-selection.page';
 import { AgmCoreModule } from '@agm/core';
+import { AgmDirectionModule } from 'agm-direction';
+import { SharedModuleModule } from '../../shared-module/shared-module.module';
 
 
 @NgModule({
@@ -16,10 +18,12 @@ import { AgmCoreModule } from '@agm/core';
     FormsModule,
     IonicModule,
     UserActionSelectionPageRoutingModule,
+    SharedModuleModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyDouJncyRWt29-PSe_RTjKXOsFeOOLJDmM',
       libraries: ['places']
-  }),
+    }),
+    AgmDirectionModule,
   ],
   declarations: [UserActionSelectionPage]
 })

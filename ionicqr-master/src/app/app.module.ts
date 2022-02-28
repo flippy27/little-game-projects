@@ -14,8 +14,10 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { IonicStorageModule } from '@ionic/storage-angular';
 import { StorageService } from './services/storage.service';
-import { Drivers, Storage } from '@ionic/storage';
+import { Drivers } from '@ionic/storage';
 import { ListaCargadoresComponent } from './components/lista-cargadores/lista-cargadores.component';
+import { SharedModuleModule } from './shared-module/shared-module.module';
+
 
 export function tokenGetter() {
   return localStorage.getItem("access_token");
@@ -25,6 +27,7 @@ export function tokenGetter() {
   declarations: [
     AppComponent, 
     ListaCargadoresComponent,
+    
   ],
   entryComponents: [
     ListaCargadoresComponent,
@@ -39,6 +42,7 @@ export function tokenGetter() {
     ReactiveFormsModule,
     FormsModule,
     IonicModule,
+    SharedModuleModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
@@ -57,6 +61,7 @@ export function tokenGetter() {
     BarcodeScanner,
     StorageService,
     IonicStorageModule,
+
   ],
   bootstrap: [AppComponent],
 })

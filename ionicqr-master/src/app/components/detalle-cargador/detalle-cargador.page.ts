@@ -61,6 +61,9 @@ export class DetalleCargadorPage implements OnInit {
   colorFondoDetenerCarga;
   timerFecha;
   empresa;
+
+  haySOC: boolean;
+  tid;
   constructor(
     private cargadorService: CargadorServiceService,
     private globalFunc: GlobalFunctionsService,
@@ -93,12 +96,10 @@ export class DetalleCargadorPage implements OnInit {
     })
   }
   getDatosManguera() {
-    
-    let dataSend = {
-      manguera_uno: this.cargador.mangueras[0].id,
-      manguera_dos: this.cargador.mangueras[1].id
-    }
+
+    let dataSend = { mangueras: this.cargador.mangueras };
     var obvDatosMangueras = this.cargadorService.datosMangueras(dataSend).subscribe(res => {
+
       this.subscriptions.push(obvDatosMangueras);
       let mangueraSend;
       let tempDate = res[0].created_at;
@@ -162,6 +163,9 @@ export class DetalleCargadorPage implements OnInit {
         } else {
           duration = moment().diff(moment(this.globalFunc.formatearFechaFull(ChargeStarted.created_at, AddSubZone.Sub, this.empresa.region_horaria, ReturnFormat.yyyyMMdd_HHmmss)));
         }
+        if (duration > 600000 && isSocTime) {
+          //TODO:
+        }
 
         this.timerFecha = this.globalFunc.formatearFechaFull(ChargeStarted.created_at, AddSubZone.Sub, this.empresa.region_horaria, ReturnFormat.ddMMyyyy_HHmmss);
         let time = this.msToTime(duration);
@@ -183,11 +187,20 @@ export class DetalleCargadorPage implements OnInit {
           } else {
             tidManguera = val[1][0];
           }
+          this.tid = tidManguera.transactionId;
+
           //GET TRANSSACTION DATA
           this.cargadorService.getDatosOcppTransactionID({ transaction_id: tidManguera.transactionId }).subscribe(result => {
+
             let filteredSoc = result.filter(x => { return x.tipos_datos_id == 38 });
+            if (filteredSoc.length == 0) {
+              this.haySOC = false;
+            } else {
+              this.haySOC = true;
+              this.socInicio = filteredSoc[filteredSoc.length - 1].valor;
+
+            }
             //FILTER SOC
-            this.socInicio = filteredSoc[filteredSoc.length - 1].valor;
 
             val[0].forEach(x => {
               if (new Date(x.created_at) > new Date(ChargeStarted.created_at)) {
@@ -213,25 +226,27 @@ export class DetalleCargadorPage implements OnInit {
               x.fecha_grafico = this.globalFunc.formatearFechaFull(x.created_at, AddSubZone.Sub, this.empresa.region_horaria, ReturnFormat.yyyyMMdd_HHmmss);
               x.fecha_grafico = new Date(x.fecha_grafico);
             })
-
+            let ssoc = this.haySOC ? this.ultimoDatoMangueraSeleccionada.soc : '-';
+            let socInicial = this.haySOC ? this.socInicio : '-';
             this.ultimaData = {
               conector: this.mangueraSeleccionada,
               energyActiveImportRegister: this.eair,
               tiempo: this.timer,
-              soc: this.ultimoDatoMangueraSeleccionada.soc,
-              socInicial: this.socInicio,
+              soc: ssoc,
+              socInicial,
             }
-            this.creaChartUnico(newValOne, this.firstTime);
 
-            if(this.ultimaData.conector.estadoCarga != "Charging"){
+            this.creaChartUnico(newValOne, this.firstTime);
+            if (this.ultimaData.conector.estadoCarga != "Charging") {
               this.is24Hour = true;
+              //TODO: this.updateBotonDetenerCarga();
+              clearTimeout(this.tempTimeTimeout);
+              //TODO:this.mostrarCuadroDetalleFinal();
             }
-            //TODO: VER GRAFICOS
-            //this.creaChartUnico(newValOne, this.firstTime);
-            this.loading = false;
             this.firstTime = false;
             this.startTimer();
             obvDMC.unsubscribe();
+            this.loading = false;
             setTimeout(() => {
               this.getDatosManguera();
             }, 5000);
@@ -239,8 +254,6 @@ export class DetalleCargadorPage implements OnInit {
         })
       })
     })
-
-
   }
   time: number = 0;
   interval;
@@ -275,17 +288,17 @@ export class DetalleCargadorPage implements OnInit {
     }, 1000);
 
   }
-  dismissModal(modal) {    
+  dismissModal(modal) {
     modal.dismiss().then(() => {
     });
   }
-  detenerCarga(){
-    if(this.is24Hour){
+  detenerCarga() {
+    if (this.is24Hour) {
       return;
     }
-    
+
   }
-  donothing(){
+  donothing() {
 
   }
   creaChartUnico(source, reload) {

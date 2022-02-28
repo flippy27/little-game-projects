@@ -7,14 +7,19 @@ import { IonicModule } from '@ionic/angular';
 import { InicioCargaPageRoutingModule } from './inicio-carga-routing.module';
 
 import { InicioCargaPage } from './inicio-carga.page';
+import { SharedModuleModule } from '../../shared-module/shared-module.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    InicioCargaPageRoutingModule
+    InicioCargaPageRoutingModule,
+    SharedModuleModule,
   ],
-  declarations: [InicioCargaPage]
+  declarations: [
+    InicioCargaPage,
+    
+  ]
 })
 export class InicioCargaPageModule {}

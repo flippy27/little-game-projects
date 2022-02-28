@@ -25,6 +25,13 @@ export class InformacionCargadorPage implements OnInit {
   zoom = 18;
   noneCharging = false;
   loading;
+  markerIcon: any = {
+    url: "../../assets/img/iconoMapaCargador.png",
+    scaledSize: {
+      width: 30,
+      height: 40
+    }
+  }
   constructor(
     private cargadorService: CargadorServiceService,
     private auth: AuthService,
@@ -76,6 +83,7 @@ export class InformacionCargadorPage implements OnInit {
             x.iconColor = 'assets/img/conector-' + x.tipo_conector.id + '-white.png';
             x.botonActivado = true;
             x.textBoton = 'Conecte manguera y presione para iniciar';
+            x.disponibilidadText = "Disponible";
           })
         } else {
 
@@ -95,6 +103,7 @@ export class InformacionCargadorPage implements OnInit {
               x.iconColor = 'assets/img/conector-' + x.tipo_conector.id + '-white.png';
               x.botonActivado = true;
               x.textBoton = 'Cargando';
+              x.disponibilidadText = "Cargando";
 
             } else {
               x.whole_background = '#4e5054';
@@ -102,7 +111,7 @@ export class InformacionCargadorPage implements OnInit {
               x.iconColor = 'assets/img/conector-' + x.tipo_conector.id + '-white.png';
               x.botonActivado = false;
               x.textBoton = 'No disponible';
-
+              x.disponibilidadText = "No Disponible";
             }
           })
 

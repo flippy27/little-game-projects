@@ -9,10 +9,13 @@ import { StorageService } from '../../services/storage.service';
 import { MapsAPILoader } from '@agm/core';
 import { ModalController } from '@ionic/angular';
 import { ListaCargadoresComponent } from '../lista-cargadores/lista-cargadores.component';
+import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
+
 @Component({
   selector: 'app-user-action-selection',
   templateUrl: './user-action-selection.page.html',
   styleUrls: ['./user-action-selection.page.scss'],
+  providers: [Geolocation]
 })
 export class UserActionSelectionPage implements OnInit {
   cargadores;
@@ -32,16 +35,58 @@ export class UserActionSelectionPage implements OnInit {
   defaultZoom = 18;
   currentLocation;
 
+  currLat;
+  currLon;
 
 
+  directionOrigin;
+  directionDestination;
 
-  mapStyle = [
+  keepCentered;
+
+  markerIcon: any = {
+    url: "../../assets/img/iconoMapaCargador.png",
+    scaledSize: {
+      width: 20,
+      height: 30
+    }
+  }
+
+ 
+  mapStyle: any = [
     {
-      "featureType":"poi",
-      "elementType":"all",
-      "stylers":[{
-        visibility:"off",
-      }]
+      "featureType": "administrative",
+      "elementType": "geometry",
+      "stylers": [
+        {
+          "visibility": "off"
+        }
+      ]
+    },
+    {
+      "featureType": "poi",
+      "stylers": [
+        {
+          "visibility": "off"
+        }
+      ]
+    },
+    {
+      "featureType": "road",
+      "elementType": "labels.icon",
+      "stylers": [
+        {
+          "visibility": "off"
+        }
+      ]
+    },
+    {
+      "featureType": "transit",
+      "stylers": [
+        {
+          "visibility": "off"
+        }
+      ]
     }
   ]
   constructor(
@@ -53,8 +98,8 @@ export class UserActionSelectionPage implements OnInit {
     private storage: StorageService,
     private apiloader: MapsAPILoader,
     private modalCtrl: ModalController,
-    
-
+    private geolocation: Geolocation,
+    private mapsAPILoader: MapsAPILoader,
   ) { }
 
   async ngOnInit() {
@@ -101,9 +146,30 @@ export class UserActionSelectionPage implements OnInit {
       console.error('Error', err);
     });
   }
+  centerCurrentLocation() {
+    this.keepCentered = !this.keepCentered;
+    this.zoom = this.defaultZoom;
+    if (this.keepCentered) {
+      this.keepCenteredFnc();
+    }
+    this.geolocation.getCurrentPosition().then((resp) => {
+      this.latitude = resp.coords.latitude;
+      this.longitude = resp.coords.longitude;
+    }).catch((error) => {
+      console.error('Error getting location', error);
+    });
+  }
   getCurrentLocation() {
 
-    this.zoom = this.defaultZoom;
+
+    this.geolocation.getCurrentPosition().then((resp) => {
+      this.latitude = resp.coords.latitude;
+      this.longitude = resp.coords.longitude;
+    }).catch((error) => {
+      console.error('Error getting location', error);
+    });
+    this.keepCenteredFnc();
+    return;
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(position => {
         if (position) {
@@ -130,29 +196,56 @@ export class UserActionSelectionPage implements OnInit {
       })
     }
   }
+  keepCenteredFnc() {
+    let watch = this.geolocation.watchPosition();
+
+    let watchingOBV = watch.subscribe((data: any) => {
+      // data can be a set of coordinates, or an error (if an error occurred).
+      // data.coords.latitude
+      // data.coords.longitude
+      this.currLat = data.coords.latitude;
+      this.currLon = data.coords.longitude;
+
+      if (!this.keepCentered) {
+        watchingOBV.unsubscribe();
+      }
+    });
+  }
 
   getCargadores() {
     this.cargadorService.fullCargadoresPorEmpresa({ empresas_id: this.tokenPayload.empresas_id }).subscribe(result => {
       this.cargadores = result;
+
+
     })
   }
   onMapReady(map) {
-    var myStyles =[
+    console.log('maap',map);
+    
+    var myStyles = [
       {
-          featureType: "poi",
-          elementType: "labels",
-          stylers: [
-                { visibility: "off" }
-          ]
+        featureType: "poi",
+        elementType: "labels",
+        stylers: [
+          { visibility: "off" }
+        ]
       }
-  ];
+    ];
     map.setOptions({
-      zoomControl: 'true',
-      zoomControlOptions: {
+      zoomControl: 'false',
+      /* zoomControlOptions: {
         position: google.maps.ControlPosition.TOP_RIGHT,
         style: google.maps.ZoomControlStyle.DEFAULT
-      },
+      }, */
       styles: myStyles
+    });
+
+  }
+  seleccionCargadores(data) {
+    this.router.navigate(['/informacion-cargador'], {
+      state: {
+        data
+      }
     });
   }
 }

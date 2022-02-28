@@ -8,6 +8,8 @@ import { InformacionCargadorPageRoutingModule } from './informacion-cargador-rou
 
 import { InformacionCargadorPage } from './informacion-cargador.page';
 import { AgmCoreModule } from '@agm/core';
+import { LogoColbunComponent } from '../logo-colbun/logo-colbun.component';
+import { SharedModuleModule } from '../../shared-module/shared-module.module';
 
 @NgModule({
   imports: [
@@ -15,11 +17,14 @@ import { AgmCoreModule } from '@agm/core';
     FormsModule,
     IonicModule,
     InformacionCargadorPageRoutingModule,
+    SharedModuleModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyDouJncyRWt29-PSe_RTjKXOsFeOOLJDmM',
       libraries: ['places']
   }),
   ],
-  declarations: [InformacionCargadorPage]
+  declarations: [
+    InformacionCargadorPage,
+  ]
 })
 export class InformacionCargadorPageModule {}

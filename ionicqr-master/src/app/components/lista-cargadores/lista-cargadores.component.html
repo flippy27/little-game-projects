@@ -1,11 +1,18 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button class="color-colbun-gray" (click)="closeModal()">
+        <ion-icon name="close-outline" size="large"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Lista cargadores</ion-title>
+    <logo-colbun slot="end"></logo-colbun>  
+  </ion-toolbar>
+</ion-header>
 <ion-content>
-  <div class="btn-cerrar" (click)="closeModal()">
-    <ion-button  style="display: flex;justify-content: center;align-items: center;" fill="clear">
-      <ion-icon name="close-outline" size="large"></ion-icon>
-    </ion-button>
-  </div>
 
-  <div style="width: 100%;height: 100%;display: flex;justify-content: center;align-items: center;" *ngIf="this.ultimosManguera.length == 0">
+  <div style="width: 100%;height: 100%;display: flex;justify-content: center;align-items: center;"
+    *ngIf="this.ultimosManguera.length == 0">
     <ion-spinner name="crescent" style="width: 100px;height: 100px;"></ion-spinner>
   </div>
 

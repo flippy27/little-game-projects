@@ -3,7 +3,8 @@
     <ion-buttons slot="start">
       <ion-back-button class="color-colbun-gray"></ion-back-button>
     </ion-buttons>
-    <ion-title class="color-colbun-gray">Información Cargador</ion-title>
+    <ion-title class="color-colbun-gray">{{cargador.alias_equipo}}</ion-title>
+    <logo-colbun slot="end"></logo-colbun>
   </ion-toolbar>
 </ion-header>
 
@@ -19,17 +20,39 @@
       <ion-item class="color-colbun-gray">Potencia máxima : {{cargador.potencia_maxima}}kW</ion-item>
     </ion-col>
     <ion-col size="4" style="margin: auto;">
-      <ion-button style="width: 100%;" id="ayudaTrigger">Ayuda</ion-button>
-      <ion-button style="width: 100%;" id="mapaTrigger">
-        <ion-icon name="location-outline"></ion-icon>
+      <ion-button style="width: 100%;" id="ayudaTrigger">Más info <ion-icon name="information-circle-outline"
+          slot="end"></ion-icon>
       </ion-button>
-      <ion-button style="width: 100%;" (click)="openDetalleCargador()" *ngIf="noneCharging">
-        <ion-icon name="flash-outline"></ion-icon>
+      <ion-button style="width: 100%;" id="mapaTrigger">Ubicación
+        <ion-icon name="location-outline" slot="end"></ion-icon>
+      </ion-button>
+      <ion-button style="width: 100%;" (click)="openDetalleCargador()" *ngIf="noneCharging">Detalle
+        <ion-icon name="flash-outline" slot="end"></ion-icon>
       </ion-button>
     </ion-col>
   </ion-row>
-  <div style="display: flex;justify-content: center;" >
-    <p style="font-size: 20px;color: #4e5054;">{{noneCharging?'Presione el conector, para iniciar carga':'Presione conector para detalle'}}</p>
+  <!-- TEXTO AYUDA -->
+  <div style="display: flex;justify-content: center;">
+    <p style="font-size: 20px;color: #4e5054;">
+      {{noneCharging?'Presione el conector, para iniciar carga':'Presione conector para detalle'}}</p>
+  </div>
+  <!-- LEYENDA -->
+  <div>
+    <ion-row>
+      <ion-col style="text-align: center;">
+        <p style="padding: 0;margin: 0;">Disponible</p>
+        <div style="width: 100%;height: 20px; background-color: #85af37;border-radius: 4px;"></div>
+      </ion-col>
+      <ion-col style="text-align: center;">
+        <p style="padding: 0;margin: 0;">No disponible</p>
+        <div style="width: 100%;height: 20px;background-color: #4e5054;border-radius: 4px;"></div>
+      </ion-col>
+      <ion-col style="text-align: center;">
+        <p style="padding: 0;margin: 0;">Cargando</p>
+        <div style="width: 100%;height: 20px;background-color: #4a72b2;border-radius: 4px;"></div>
+      </ion-col>
+
+    </ion-row>
   </div>
   <ion-card *ngFor="let manguera of cargador.mangueras" style="min-height: 215px;max-height: 400px;"
     [style.background-color]="manguera.whole_background" [style.color]="manguera.foreground_color"
@@ -52,10 +75,10 @@
             </ion-row>
             <ion-row style="margin-top: 20px;">
               <ion-col>
-                <ion-text style="font-size: 20px;color: #4e5054;font-weight: 600;" *ngIf="manguera.estadoCarga != 'Charging'">Disponible</ion-text>
+                <ion-text style="font-size: 20px;color: white;font-weight: 600;">{{manguera.disponibilidadText}}
+                </ion-text>
                 <br>
-<!--                 <ion-text style="font-size: 16px;color: black;">CLP 250/kWh</ion-text>
- -->              </ion-col>
+              </ion-col>
             </ion-row>
           </ion-col>
           <ion-col size="4" style="display:flex;align-items: center;justify-content: center;">
@@ -146,7 +169,7 @@
       <div style="margin: 10px;border: 4px solid #4e5054;border-radius: 6px;" class="mapdiv">
 
         <agm-map [latitude]="latitud" [longitude]="longitud" [zoom]="zoom" style="height: 100%;">
-          <agm-marker [latitude]="latitud" [longitude]="longitud" [markerDraggable]="false"></agm-marker>
+          <agm-marker [latitude]="latitud" [longitude]="longitud" [markerDraggable]="false" [iconUrl]="markerIcon"></agm-marker>
         </agm-map>
       </div>
     </ion-content>
