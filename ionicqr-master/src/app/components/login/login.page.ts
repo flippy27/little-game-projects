@@ -8,10 +8,13 @@ import { User } from '../interfaces/User';
 import { Platform } from '@ionic/angular';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { StorageService } from '../../services/storage.service';
+import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/ngx';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
+  providers:[ScreenOrientation]
 })
 export class LoginPage implements OnInit {
   loginForm: FormGroup;
@@ -24,8 +27,13 @@ export class LoginPage implements OnInit {
     private fb: FormBuilder,
     private platform: Platform,
     private storageS:StorageService,
+    private screenOrientation: ScreenOrientation,
 
-  ) { }
+  ) {
+
+    this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
+
+   }
   ionViewDidEnter() {
     document.addEventListener("backbutton",function(e) {
       console.log("disable back button")

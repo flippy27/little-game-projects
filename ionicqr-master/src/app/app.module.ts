@@ -61,6 +61,7 @@ export function tokenGetter() {
     BarcodeScanner,
     StorageService,
     IonicStorageModule,
+    ScreenOrientation,
 
   ],
   bootstrap: [AppComponent],

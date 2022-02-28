@@ -16,6 +16,9 @@ import { LoginPage } from './login.page';
     LoginPageRoutingModule,
     ReactiveFormsModule,
   ],
-  declarations: [LoginPage]
+  declarations: [LoginPage],
+  providers:[
+    ScreenOrientation,
+  ]
 })
 export class LoginPageModule {}

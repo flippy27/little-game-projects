@@ -13,7 +13,11 @@ export class AppComponent {
     private menu: MenuController,
     private auth:AuthService,
     private router:Router,
-    ) {}
+    
+    ) {
+      
+
+    }
   openFirst() {
     this.menu.enable(true, 'first');
     this.menu.open('first');
