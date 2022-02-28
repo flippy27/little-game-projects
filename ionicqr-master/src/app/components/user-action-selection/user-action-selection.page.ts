@@ -101,7 +101,11 @@ export class UserActionSelectionPage implements OnInit {
     private geolocation: Geolocation,
     private mapsAPILoader: MapsAPILoader,
   ) { }
-
+  ionViewDidEnter() {
+    document.addEventListener("backbutton",function(e) {
+      console.log("disable back button")
+    }, false);
+  }
   async ngOnInit() {
     this.zoom = this.defaultZoom;
     const token: any = localStorage.getItem('access_token');

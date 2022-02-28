@@ -26,7 +26,11 @@ export class LoginPage implements OnInit {
     private storageS:StorageService,
 
   ) { }
-
+  ionViewDidEnter() {
+    document.addEventListener("backbutton",function(e) {
+      console.log("disable back button")
+    }, false);
+  }
   ngOnInit() {
 
     this.loginForm = this.fb.group({

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Route, Router, RouteReuseStrategy } from '@angular/router';
 import { CargadorServiceService } from '../../services/cargador-service.service';
 import { AuthService } from '../../services/auth.service';
-import { ModalController } from '@ionic/angular';
+import { ModalController, Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-informacion-cargador',
@@ -37,9 +37,15 @@ export class InformacionCargadorPage implements OnInit {
     private auth: AuthService,
     private router: Router,
     private modalController: ModalController,
-  ) { }
+    private platform: Platform
+  ) {
+    this.platform.backButton.subscribeWithPriority(9999, () => {
+      // do nothing
+    });
+  }
 
   ngOnInit() {
+
     this.loading = true;
     this.cargador = history.state.data;
     let token = localStorage.getItem('access_token');
@@ -49,6 +55,11 @@ export class InformacionCargadorPage implements OnInit {
 
 
     this.getAlarmasMangueras();
+  }
+  ionViewDidEnter() {
+    document.addEventListener("backbutton",function(e) {
+      console.log("disable back button")
+    }, false);
   }
   getAlarmasMangueras() {
     let manguerasIds = [];

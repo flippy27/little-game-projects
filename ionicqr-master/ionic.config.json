@@ -1,7 +1,8 @@
 {
   "name": "Colbun Testing",
   "integrations": {
-    "capacitor": {}
+    "capacitor": {},
+    "cordova": {}
   },
   "type": "angular"
 }

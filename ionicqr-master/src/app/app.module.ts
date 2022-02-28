@@ -35,7 +35,7 @@ export function tokenGetter() {
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(),
+    IonicModule.forRoot({hardwareBackButton: false}),
     AppRoutingModule,
     HttpClientModule,
     CommonModule,

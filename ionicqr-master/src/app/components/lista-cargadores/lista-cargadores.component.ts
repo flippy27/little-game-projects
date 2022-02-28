@@ -36,7 +36,11 @@ export class ListaCargadoresComponent implements OnInit {
 
 
   ) { }
-
+  ionViewDidEnter() {
+    document.addEventListener("backbutton",function(e) {
+      console.log("disable back button")
+    }, false);
+  }
   ngOnInit() {
     
     const token: any = localStorage.getItem('access_token');

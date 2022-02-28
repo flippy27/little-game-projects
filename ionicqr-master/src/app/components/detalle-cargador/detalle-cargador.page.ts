@@ -69,7 +69,11 @@ export class DetalleCargadorPage implements OnInit {
     private globalFunc: GlobalFunctionsService,
 
   ) { }
-
+  ionViewDidEnter() {
+    document.addEventListener("backbutton",function(e) {
+      console.log("disable back button")
+    }, false);
+  }
   ngOnInit() {
     this.loading = true;
     this.mangueraSeleccionada = null;

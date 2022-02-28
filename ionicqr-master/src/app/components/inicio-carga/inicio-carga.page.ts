@@ -14,5 +14,10 @@ export class InicioCargaPage implements OnInit {
     this.manguera = history.state.manguera;
     this.conectorImg = 'assets/img/conector-' + this.manguera.tipo_conector.id + '.png'
   }
+  ionViewDidEnter() {
+    document.addEventListener("backbutton",function(e) {
+      console.log("disable back button")
+    }, false);
+  }
 
 }
