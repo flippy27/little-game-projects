@@ -9,12 +9,14 @@ import { Platform } from '@ionic/angular';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { StorageService } from '../../services/storage.service';
 import { ScreenOrientation } from '@awesome-cordova-plugins/screen-orientation/ngx';
+import { AndroidFullScreen } from '@awesome-cordova-plugins/android-full-screen/ngx';
+
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
-  providers:[ScreenOrientation]
+  providers:[ScreenOrientation,AndroidFullScreen]
 })
 export class LoginPage implements OnInit {
   loginForm: FormGroup;
@@ -28,11 +30,13 @@ export class LoginPage implements OnInit {
     private platform: Platform,
     private storageS:StorageService,
     private screenOrientation: ScreenOrientation,
-
+    private androidFullScreen: AndroidFullScreen,
   ) {
 
     this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
-
+    this.androidFullScreen.isImmersiveModeSupported()
+    .then(() => console.log('Immersive mode supported'))
+    .catch(err => console.log(err));
    }
   ionViewDidEnter() {
     document.addEventListener("backbutton",function(e) {
