@@ -1,0 +1,19 @@
+.center-login {
+    min-width: 350px;
+}
+.botonLogin{
+    background: var(--ion-color-colbun-light-blue);
+    height: 6vh;
+    font-size: 1.5em;
+}
+.botonRegistro{
+    --ion-color: var(--ion-color-colbun-light-blue);
+    background-color: transparent;
+    
+    font-size: 1em;
+}
+
+.form-height{
+    height: -webkit-calc(60vh);
+
+}

@@ -8,7 +8,7 @@ import { InformacionCargadorPageRoutingModule } from './informacion-cargador-rou
 
 import { InformacionCargadorPage } from './informacion-cargador.page';
 import { AgmCoreModule } from '@agm/core';
-import { LogoColbunComponent } from '../logo-colbun/logo-colbun.component';
+import { LogoColbunComponent } from '../../components/logo-colbun/logo-colbun.component';
 import { SharedModuleModule } from '../../shared-module/shared-module.module';
 
 @NgModule({

@@ -8,7 +8,7 @@ import { AuthService } from '../../services/auth.service';
 import { StorageService } from '../../services/storage.service';
 import { MapsAPILoader } from '@agm/core';
 import { ModalController } from '@ionic/angular';
-import { ListaCargadoresComponent } from '../lista-cargadores/lista-cargadores.component';
+import { ListaCargadoresComponent } from '../../components/lista-cargadores/lista-cargadores.component';
 import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
 
 @Component({

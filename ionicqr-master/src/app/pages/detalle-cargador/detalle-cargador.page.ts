@@ -2,12 +2,13 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { CargadorServiceService } from 'src/app/services/cargador-service.service';
 import * as moment from 'moment-timezone';
 import { GlobalFunctionsService } from '../../services/global-functions.service';
-import { AddSubZone } from '../interfaces/enums/addSubZone.enum';
-import { ReturnFormat } from '../interfaces/enums/returnFormat.enum';
+import { AddSubZone } from '../../components/interfaces/enums/addSubZone.enum';
+import { ReturnFormat } from '../../components/interfaces/enums/returnFormat.enum';
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import am4lang_es_ES from "@amcharts/amcharts4/lang/es_ES";
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-detalle-cargador',
@@ -43,12 +44,16 @@ export class DetalleCargadorPage implements OnInit {
   is24Hour;
   horaInicio;
   socInicio;
+  socFin;
 
   //@ViewChild('cargadoresFinalPaginator') cargadoresFinalPaginator: MatPaginator;
   @ViewChild('conectorSelect') conectorSelect;
   @ViewChild('espereDetencion') espereDetencionDialog;
   @ViewChild('informeFinalCarga') informeFinalCargaDialog;
   columnasDataCargadores: string[] = ['cargador', 'manguera', 'dia', 'horaInicio', 'horaFin', 'minutosCarga', 'socInicio', 'socFin', 'kWh', 'bus'];
+
+  @ViewChild('resumenModal') resumenModal;
+
 
   subscriptions = [];
 
@@ -67,10 +72,11 @@ export class DetalleCargadorPage implements OnInit {
   constructor(
     private cargadorService: CargadorServiceService,
     private globalFunc: GlobalFunctionsService,
+    private modalCtrl:ModalController,
 
   ) { }
   ionViewDidEnter() {
-    document.addEventListener("backbutton",function(e) {
+    document.addEventListener("backbutton", function (e) {
       console.log("disable back button")
     }, false);
   }
@@ -81,6 +87,8 @@ export class DetalleCargadorPage implements OnInit {
     this.isOn = false;
     this.cargador = history.state.cargadorData;
     this.is24Hour = history.state.is24Hours;
+    console.log('data arrive',history.state.is24Hours);
+    
     if (this.is24Hour) {
       this.textoDetenerCarga = 'Resumen Carga';
       this.colorFondoDetenerCarga = '#f0ce2d'
@@ -123,6 +131,8 @@ export class DetalleCargadorPage implements OnInit {
       let ff = this.globalFunc.formatearFechaFull(new Date().toString(), AddSubZone.Add, this.empresa.region_horaria, ReturnFormat.yyyyMMdd_HHmmss);
       obvDatosMangueras.unsubscribe();
       var obvDAM = this.cargadorService.datosAlarmasMangueras({ mangueras_id: this.ultimoDatoMangueraSeleccionada.mangueras_id, fechaIni: ff, hours: this.is24Hour ? 24 : 2 }).subscribe(res => {
+        console.log('dalarmasmangueras', res);
+
         this.subscriptions.push(obvDAM);
         let ChargeStarted;
 
@@ -130,16 +140,17 @@ export class DetalleCargadorPage implements OnInit {
           const element = res[i];
           if (element.estado == "Charging") {
             ChargeStarted = element;
-            if (res[i + 1].estado == "Charging") {
-              ChargeStarted = res[i + 1];
-              break;
+            if (i < res.lenght) {
+              if (res[i + 1].estado == "Charging") {
+                ChargeStarted = res[i + 1];
+                break;
+              }
             }
             break;
           }
         }
 
         let ChargeEnded;
-        let isSocTime = false;
         if (this.is24Hour) {
           for (let i = 0; i < res.length; i++) {
             const element = res[i];
@@ -147,13 +158,10 @@ export class DetalleCargadorPage implements OnInit {
               if (res[i - 1] != null) {
                 ChargeEnded = res[i - 1];
               } else {
-                let socMasUnMinuto = moment(this.ultimoDatoMangueraSeleccionada.created_at).valueOf();
-
                 ChargeEnded = {
 
                   created_at: this.ultimoDatoMangueraSeleccionada.created_at,
                 }
-                isSocTime = true;
               }
               break;
             }
@@ -166,9 +174,6 @@ export class DetalleCargadorPage implements OnInit {
           duration = Math.abs(moment(ChargeStarted.created_at).diff(moment(ChargeEnded.created_at)));
         } else {
           duration = moment().diff(moment(this.globalFunc.formatearFechaFull(ChargeStarted.created_at, AddSubZone.Sub, this.empresa.region_horaria, ReturnFormat.yyyyMMdd_HHmmss)));
-        }
-        if (duration > 600000 && isSocTime) {
-          //TODO:
         }
 
         this.timerFecha = this.globalFunc.formatearFechaFull(ChargeStarted.created_at, AddSubZone.Sub, this.empresa.region_horaria, ReturnFormat.ddMMyyyy_HHmmss);
@@ -183,28 +188,34 @@ export class DetalleCargadorPage implements OnInit {
         let fini2 = moment(ChargeStarted.created_at).add(+1, 'hour').format('YYYY-MM-DD HH:mm:ss');
         obvDAM.unsubscribe();
         var obvDMC = this.cargadorService.datosMangueraColbun({ mangueras_id: this.ultimoDatoMangueraSeleccionada.mangueras_id, fechaIni: fini2, hours: this.is24Hour ? 24 : 2 }).subscribe(val => {
-          let newValZero = [];
+          let newValZero = [];            
+
 
           let tidManguera;
           if (val[0][0].mangueras_id == this.ultimoDatoMangueraSeleccionada.mangueras_id) {
-            tidManguera = val[0][0];
+            //tidManguera = val[0][0];
+            tidManguera = val[0].find(x => { return x.transactionId != 0 })
           } else {
-            tidManguera = val[1][0];
+            tidManguera = val[1].find(x => { return x.transactionId != 0 });
           }
           this.tid = tidManguera.transactionId;
+          console.log(this.tid);
 
           //GET TRANSSACTION DATA
           this.cargadorService.getDatosOcppTransactionID({ transaction_id: tidManguera.transactionId }).subscribe(result => {
+            
 
+            //FILTER SOC
             let filteredSoc = result.filter(x => { return x.tipos_datos_id == 38 });
             if (filteredSoc.length == 0) {
               this.haySOC = false;
             } else {
               this.haySOC = true;
               this.socInicio = filteredSoc[filteredSoc.length - 1].valor;
-
+              this.socFin = filteredSoc[0].valor;
             }
-            //FILTER SOC
+            console.log('fsoc', filteredSoc);
+
 
             val[0].forEach(x => {
               if (new Date(x.created_at) > new Date(ChargeStarted.created_at)) {
@@ -230,6 +241,7 @@ export class DetalleCargadorPage implements OnInit {
               x.fecha_grafico = this.globalFunc.formatearFechaFull(x.created_at, AddSubZone.Sub, this.empresa.region_horaria, ReturnFormat.yyyyMMdd_HHmmss);
               x.fecha_grafico = new Date(x.fecha_grafico);
             })
+            
             let ssoc = this.haySOC ? this.ultimoDatoMangueraSeleccionada.soc : '-';
             let socInicial = this.haySOC ? this.socInicio : '-';
             this.ultimaData = {
@@ -239,18 +251,22 @@ export class DetalleCargadorPage implements OnInit {
               soc: ssoc,
               socInicial,
             }
+            this.loading = false;
 
             this.creaChartUnico(newValOne, this.firstTime);
+            console.log('ultima data',this.ultimaData);
+            
             if (this.ultimaData.conector.estadoCarga != "Charging") {
               this.is24Hour = true;
-              //TODO: this.updateBotonDetenerCarga();
+              //this.updateBotonDetenerCarga();
+              this.textoDetenerCarga = "Resumen Carga";
               clearTimeout(this.tempTimeTimeout);
-              //TODO:this.mostrarCuadroDetalleFinal();
+              //this.mostrarCuadroDetalleFinal();
+              return;
             }
             this.firstTime = false;
             this.startTimer();
             obvDMC.unsubscribe();
-            this.loading = false;
             setTimeout(() => {
               this.getDatosManguera();
             }, 5000);
@@ -296,15 +312,61 @@ export class DetalleCargadorPage implements OnInit {
     modal.dismiss().then(() => {
     });
   }
-  detenerCarga() {
-    if (this.is24Hour) {
-      return;
-    }
-
-  }
+ 
   donothing() {
 
   }
+
+  detenerCarga() {
+    console.log('llegue hasta antes del 24 h');
+    
+    if (this.is24Hour) {
+      console.log('entre al 24 hours',this.is24Hour);
+      
+      return;
+    }
+    let equipo = this.cargador.nombre;
+    let manguera = this.mangueraSeleccionada;
+    
+    let dataSend = {
+      equipo,
+      pistola: manguera.numero_manguera,
+      manguera_id: manguera.id,
+      tid: this.tid,
+    }
+    console.log('pase el 24h  datasend',dataSend);
+
+    this.cargadorService.remoteStopNuevo(dataSend).subscribe(res => {
+      console.log(res);
+      if (res.mensaje === "correcto") {
+
+        this.is24Hour = true;
+        this.chequearEstado();
+      } else {
+        console.error('error deteniendo carga');
+        
+        
+      }
+
+    })
+  }
+  chequearEstado() {
+    this.cargadorService.ultimasalarmasMangueras([{ mangueras_ids: this.mangueraSeleccionada.id }]).subscribe(x => {
+      if (x.estado != "Charging" && x.estado != "Offline") {
+        this.mostrarCuadroDetalleFinal();
+      } else {
+        this.chequearEstado();
+      }
+    })
+  }
+  async mostrarCuadroDetalleFinal() {
+    const modal = await this.modalCtrl.create({
+      component: this.resumenModal,
+    });
+
+    await modal.present();
+  }
+
   creaChartUnico(source, reload) {
 
 
@@ -356,25 +418,17 @@ export class DetalleCargadorPage implements OnInit {
       scrollbarX.series.push(series);
       chart.scrollbarX = scrollbarX;
 
-      series.strokeOpacity = 1;
-      series.fillOpacity = 0.2;
-      series.tooltip.getFillFromObject = false;
+
       series.tooltip.background.fill = am4core.color("#4e5054");
-      //series.fill = pattern;
-      series.tooltip.autoTextColor = false;
-      series.tooltip.label.fill = am4core.color("white");
-
-
     }
 
     createAxisAndSeries("valor", nombre, false, "circle", "");
-
-    // Add legend
-    chart.legend = new am4charts.Legend();
-    chart.legend.useDefaultMarker = true;
-
     // Add cursor
     chart.cursor = new am4charts.XYCursor();
+    chart.scrollbarX.startGrip.disabled = true;
+    chart.scrollbarX.endGrip.disabled = true;
+    chart.scrollbarX.disabled = true;
+
 
     const watermark = new am4core.Image();
     watermark.href = "/assets/img/dhemax_chico.svg";

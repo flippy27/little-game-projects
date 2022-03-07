@@ -10,14 +10,14 @@ import { ModalController, Platform } from '@ionic/angular';
   styleUrls: ['./informacion-cargador.page.scss'],
 })
 export class InformacionCargadorPage implements OnInit {
-  cargador;
-  cargadorImg;
-  ovb;
-  alarmasManguera;
-  btnCargaActualClass;
-  btnCargaActualActivated;
-  is24Hours;
-  textoBotonCargaActual;
+  cargador:any;
+  cargadorImg:any;
+  ovb:any;
+  alarmasManguera:any;
+  btnCargaActualClass:any;
+  btnCargaActualActivated:any;
+  is24Hours:any;
+  textoBotonCargaActual:any;
   currentModal = null;
 
   latitud;
@@ -32,6 +32,42 @@ export class InformacionCargadorPage implements OnInit {
       height: 40
     }
   }
+  mapStyle: any = [
+    {
+      "featureType": "administrative",
+      "elementType": "geometry",
+      "stylers": [
+        {
+          "visibility": "off"
+        }
+      ]
+    },
+    {
+      "featureType": "poi",
+      "stylers": [
+        {
+          "visibility": "off"
+        }
+      ]
+    },
+    {
+      "featureType": "road",
+      "elementType": "labels.icon",
+      "stylers": [
+        {
+          "visibility": "off"
+        }
+      ]
+    },
+    {
+      "featureType": "transit",
+      "stylers": [
+        {
+          "visibility": "off"
+        }
+      ]
+    }
+  ]
   constructor(
     private cargadorService: CargadorServiceService,
     private auth: AuthService,
@@ -66,6 +102,9 @@ export class InformacionCargadorPage implements OnInit {
     this.cargador.mangueras.forEach(x => {
       manguerasIds.push(x.id)
     })
+    if(this.cargador){
+      this.cargador.nombre.replace(/_/g, "-");
+    }
     this.ovb = this.cargadorService.ultimasalarmasMangueras({ mangueras_ids: manguerasIds }).subscribe(res => {
       this.loading = false;
       this.alarmasManguera = res;
@@ -149,6 +188,7 @@ export class InformacionCargadorPage implements OnInit {
       this.router.navigate(['/inicio-carga'], {
         state: {
           manguera,
+          cargadorData:this.cargador,
         }
       });
     }

@@ -1,12 +1,4 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button class="color-colbun-gray"></ion-back-button>
-    </ion-buttons>
-    <ion-title class="color-colbun-gray">{{manguera.tipo_conector.nombre}}</ion-title>
-    <logo-colbun slot="end"></logo-colbun>
-  </ion-toolbar>
-</ion-header>
+<header headerTitle="Inicio Carga">{{manguera.tipo_conector.nombre}}</header>
 
 <ion-content scrollY="false">
   <div class="ion-margin-top">
@@ -27,7 +19,9 @@
     </ion-row>
     <ion-row>
       <ion-col style="display: flex;justify-content: center;margin-top: 30px;">
-        <ion-button class="boton-iniciar" style="width: 80%;height: 100px;font-size: 25px;">Iniciar carga</ion-button>
+        <p *ngIf="!cargaSeEstaIniciando">{{estadoPreCarga}}</p>
+        <ion-button class="boton-iniciar" style="width: 80%;height: 100px;font-size: 25px;" [disabled]="botonInicioActivado" *ngIf="!cargaSeEstaIniciando" (click)="botonInicio()">Iniciar carga</ion-button>
+        <p *ngIf="cargaSeEstaIniciando">{{EstadoInicioCarga}}</p>
       </ion-col>
     </ion-row>
     

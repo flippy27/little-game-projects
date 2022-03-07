@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  //uri:'http://localhost:3001',
-  uri:'http://pge.dhemax.cl:3001',
+  uri:'http://localhost:3001',
+  //uri:'http://pge.dhemax.cl:3001',
 };
 
 /*

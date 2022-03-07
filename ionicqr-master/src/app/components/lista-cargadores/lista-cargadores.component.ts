@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { forkJoin } from 'rxjs';
@@ -10,7 +10,7 @@ import { ModalController } from '@ionic/angular';
   templateUrl: './lista-cargadores.component.html',
   styleUrls: ['./lista-cargadores.component.scss'],
 })
-export class ListaCargadoresComponent implements OnInit {
+export class ListaCargadoresComponent implements OnInit, OnDestroy {
   cargadores;
 
   favoritos = [];
@@ -27,7 +27,7 @@ export class ListaCargadoresComponent implements OnInit {
   loading = true;
   transactions = [];
 
-
+  ultimasManguerasSub;
   constructor(
     private cargadorService: CargadorServiceService,
     private jwtHelper: JwtHelperService,
@@ -36,6 +36,9 @@ export class ListaCargadoresComponent implements OnInit {
 
 
   ) { }
+  ngOnDestroy(): void {
+    this.ultimasManguerasSub.unsubscribe();
+  }
   ionViewDidEnter() {
     document.addEventListener("backbutton",function(e) {
       console.log("disable back button")
@@ -154,6 +157,7 @@ export class ListaCargadoresComponent implements OnInit {
 
   }
   seleccionCargadores(data) {
+    this.ultimasManguerasSub.unsubscribe();
     this.modalCtrl.dismiss();
     this.router.navigate(['/informacion-cargador'], {
       state: {
@@ -210,7 +214,7 @@ export class ListaCargadoresComponent implements OnInit {
     })
   }
   getDatosMangueras(arr) {    
-    let obv = forkJoin(arr).subscribe(res => {
+    this.ultimasManguerasSub = forkJoin(arr).subscribe(res => {
       console.log('res ultimas mangueras',res);
       this.ultimosManguera = [];
       res.forEach((x: any) => {
@@ -221,12 +225,13 @@ export class ListaCargadoresComponent implements OnInit {
         })
       })
       console.log('get datos manguera',this.ultimosManguera);
-      obv.unsubscribe();
+      this.ultimasManguerasSub.unsubscribe();
       setTimeout(() => {
         this.getDatosMangueras(arr);
       }, 5000);
     });
   }
+  
   prepareDatosMangueras() {
     let temparr = [];
     let manguerasIds = [];
@@ -257,7 +262,8 @@ export class ListaCargadoresComponent implements OnInit {
       this.prepareDatosMangueras();
     })
   }
-  closeModal(){
+  closeModal(){    
+    this.ultimasManguerasSub.unsubscribe();
     this.modalCtrl.dismiss();
   }
 

@@ -76,5 +76,24 @@ export class CargadorServiceService {
   getEmpresa(empresa_id): Observable<any> {
     return this.http.get(this.uri + "/empresas/" + empresa_id, this.options)
   }
-  
+  getDatoMangueraUnica(data: any): Observable<any> {
+    return this.http.post(this.uri + "/getDatoMangueraUnica", data, this.options)
+  }
+  getConfigComandosOcpp(data: any): Observable<any> {
+    return this.http.post(this.uri + "/getConfigComandosOcpp", data, this.options)
+  }
+  // Inicio carga
+  envioComandoOcppStart(data): Observable<any> {
+    // return this.http.post(this.ocpp+ "/api/v1/machine/start", data)
+    return this.http.post(this.uri + "/remoteStartFull", data, this.options)/* .pipe(
+          retry(4),
+          timeout(10000)
+      ) */
+
+  }
+  remoteStopNuevo(data): Observable<any> {
+    return this.http.post(this.uri + "/remoteStopNuevo", data, this.options)
+}
+ 
+
 }

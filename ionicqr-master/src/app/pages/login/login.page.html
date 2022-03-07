@@ -1,26 +1,23 @@
-<!-- <ion-header>
-  <ion-toolbar>
-    <ion-title>login</ion-title>
-  </ion-toolbar>
-</ion-header> -->
-
 <ion-content class="auth-form">
-  <ion-row>
-    <div style="display: flex;justify-content: center;width: 100%;margin-top: 20px;">
-      <ion-img src="../../../assets/img/colbun-gris.png" style="width: 300px;"></ion-img>
+  <div style="width: 100%;height: 100%;display: flex;align-items: center;justify-content: center;" *ngIf="loading">
+    <ion-spinner name="crescent" style="width: 100px;height: 100px;"></ion-spinner>
+  </div>
+  <ion-row *ngIf="!loading">
+    <div style="display: flex;justify-content: center;width: 100%;margin-top: 3vh;">
+      <ion-img src="../../../assets/img/colbun-gris.png" style="width:40vh;"></ion-img>
     </div>
-  </ion-row>
-  <ion-row style="display: flex;align-items: center;" class="form-height">
+  </ion-row >
+  <ion-row *ngIf="!loading" style="display: flex;align-items: center;justify-content: center;flex-direction: column;margin-top: 4vh;" class="form-height" >
     <form [formGroup]="loginForm" (ngSubmit)="submit(loginForm.value)"
-      style="display:flex;flex-direction: column;align-items: center; justify-content: center;height: 100%;">
-      <div style="padding: 0 20px ;">
+      style="display:flex;flex-direction: column;align-items: center; justify-content: center;">
+      <div style="padding: 0 3vh ;">
         <div style="display: flex;flex-direction: column;align-items: center;">
           <p style="color: #4e5054;font-weight: bold;">Ingreso a la Plataforma de Gestión
             de Carga</p>
 
         </div>
         <div style="display: flex;flex-direction: column;align-items: center;">
-          <p style="color: #4e5054;">Bienvenido/a a la Plataforma de Gestión de Carga, ingrese con
+          <p style="color: #4e5054;text-align: center;">Bienvenido/a a la Plataforma de Gestión de Carga, ingrese con
             sus datos</p>
         </div>
         <ion-list>

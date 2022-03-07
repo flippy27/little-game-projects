@@ -1,0 +1,31 @@
+<header headerTitle="Seleccione cargador" [sandwich]="true"></header>
+
+<ion-content hide-nav-bar="true">
+  <div class="div-boton-centrar-contenedor">
+
+    <div style="text-align: end;width: 100%;" class="div-boton-centrar">
+      <ion-button fill="clear" (click)="centerCurrentLocation()">
+        <ion-icon name="locate-outline" size="large" [style.color]="'gray'"></ion-icon>
+      </ion-button>
+    </div>
+  </div>
+  <div class="mapdiv">
+    <agm-map [latitude]="latitude" [longitude]="longitude" [zoom]="zoom" style="height: 100%;" [styles]="mapStyle"
+      (mapReady)="onMapReady($event)" [disableDefaultUI]="true">
+      <agm-marker [latitude]="currLat" [longitude]="currLon" [markerDraggable]="false"></agm-marker>
+      <agm-marker *ngFor="let cargador of cargadores" [latitude]="cargador.latitud" [longitude]="cargador.longitud"
+        [markerDraggable]="false" [iconUrl]="markerIcon" (markerClick)="seleccionCargadores(cargador)"></agm-marker>
+    </agm-map>
+  </div>
+  <div style="text-align: center; width: 100%;" class="div-boton-escanear">
+    <ion-button class="boton-escanear" (click)="scanBarcode()" style="height: 7vh;margin-bottom: 8vh;">
+      Escanear Qr <ion-icon name="qr-code-outline" size="large" style="padding-left: 10px;"></ion-icon>
+    </ion-button>
+  </div>
+
+  <div style="position: absolute;bottom: 40px;width: 100%;text-align: center;">
+    <ion-button style="height: 7vh;width: 70%;font-size: 1em;" (click)="showCargadoresModal()">Ver cargadores
+    </ion-button>
+  </div>
+
+</ion-content>

@@ -1,12 +1,5 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button class="color-colbun-gray"></ion-back-button>
-    </ion-buttons>
-    <ion-title class="color-colbun-gray">{{cargador.alias_equipo}}</ion-title>
-    <logo-colbun slot="end"></logo-colbun>
-  </ion-toolbar>
-</ion-header>
+<header headerTitle="{{cargador.alias_equipo}}"></header>
+
 
 <ion-content>
   <div style="width: 100%;height: 100%;display: flex;align-items: center;justify-content: center;" *ngIf="loading">
@@ -16,39 +9,39 @@
     <ion-col size="8">
 
       <ion-item class="color-colbun-gray">Dirección : {{cargador.direccion}}</ion-item>
-      <ion-item class="color-colbun-gray">S/N : {{cargador.nombre.replaceAll('_','-')|uppercase}}</ion-item>
+      <ion-item class="color-colbun-gray">S/N : {{cargador.nombre|uppercase}}</ion-item>
       <ion-item class="color-colbun-gray">Potencia máxima : {{cargador.potencia_maxima}}kW</ion-item>
     </ion-col>
-    <ion-col size="4" style="margin: auto;">
-      <ion-button style="width: 100%;" id="ayudaTrigger">Más info <ion-icon name="information-circle-outline"
-          slot="end"></ion-icon>
+    <ion-col size="4" style="margin: 0;padding: 0;">
+      <ion-button style="width: 100%;font-size: 0.6em;" id="ayudaTrigger">Más info
+        <ion-icon name="information-circle-outline" slot="end" size="large"></ion-icon>
       </ion-button>
-      <ion-button style="width: 100%;" id="mapaTrigger">Ubicación
-        <ion-icon name="location-outline" slot="end"></ion-icon>
+      <ion-button style="width: 100%;font-size: 0.6em;" id="mapaTrigger">Ubicación
+        <ion-icon name="location-outline" slot="end" size="large"></ion-icon>
       </ion-button>
-      <ion-button style="width: 100%;" (click)="openDetalleCargador()" *ngIf="noneCharging">Detalle
-        <ion-icon name="flash-outline" slot="end"></ion-icon>
+      <ion-button style="width: 100%;font-size: 0.6em;" (click)="openDetalleCargador()" *ngIf="noneCharging">Detalle
+        <ion-icon name="flash-outline" slot="end" size="large"></ion-icon>
       </ion-button>
     </ion-col>
   </ion-row>
   <!-- TEXTO AYUDA -->
-  <div style="display: flex;justify-content: center;">
-    <p style="font-size: 20px;color: #4e5054;">
+  <div style="display: flex;justify-content: center;margin: 0;padding: 0;">
+    <p style="font-size: 20px;color: #4e5054;margin:0;padding: 0;">
       {{noneCharging?'Presione el conector, para iniciar carga':'Presione conector para detalle'}}</p>
   </div>
   <!-- LEYENDA -->
-  <div style="padding: 20px;">
+  <div style="padding: 5px;">
     <ion-row>
       <ion-col style="text-align: center;">
-        <p style="padding: 0;margin: 0;">Disponible</p>
+        <p style="padding: 0;margin: 0;font-size: 0.8em;padding-bottom: 5px;">Disponible</p>
         <div style="width: 100%;height: 20px; background-color: #85af37;border-radius: 4px;"></div>
       </ion-col>
       <ion-col style="text-align: center;">
-        <p style="padding: 0;margin: 0;">No disponible</p>
+        <p style="padding: 0;margin: 0;font-size: 0.8em;padding-bottom: 5px;">No disponible</p>
         <div style="width: 100%;height: 20px;background-color: #4e5054;border-radius: 4px;"></div>
       </ion-col>
       <ion-col style="text-align: center;">
-        <p style="padding: 0;margin: 0;">Cargando</p>
+        <p style="padding: 0;margin: 0;font-size: 0.8em;padding-bottom: 5px;">Cargando</p>
         <div style="width: 100%;height: 20px;background-color: #4a72b2;border-radius: 4px;"></div>
       </ion-col>
 
@@ -75,7 +68,7 @@
             </ion-row>
             <ion-row style="margin-top: 20px;">
               <ion-col>
-                <ion-text style="font-size: 20px;color: white;font-weight: 600;">{{manguera.disponibilidadText}}
+                <ion-text style="font-size: 1em;color: white;font-weight: 600;">{{manguera.disponibilidadText}}
                 </ion-text>
                 <br>
               </ion-col>
@@ -97,12 +90,17 @@
   <ng-template>
     <ion-header translucent>
       <ion-toolbar>
-        <ion-title>Ayuda</ion-title>
-        <ion-buttons slot="end">
-          <ion-button (click)="dismissModal(ayudaModal)">Cerrar</ion-button>
+        <ion-buttons slot="start">
+          <ion-button (click)="dismissModal(ayudaModal)">
+            <ion-icon name="arrow-back-outline"></ion-icon>
+          </ion-button>
         </ion-buttons>
+
+        <ion-title style="font-size: 1em;">Ayuda</ion-title>
+        <logo-colbun slot="end"></logo-colbun>
       </ion-toolbar>
     </ion-header>
+
     <ion-content>
       <!-- LEYENDA -->
       <div style="display: flex;justify-content: center;margin-top: 20px;">
@@ -111,7 +109,7 @@
       <ion-row>
         <ion-col style="text-align: center;">
           <div class="p-2 bd-highlight">
-            <p style="color:#4e5054;font-size: 20px;">Cargando</p>
+            <p style="color:#4e5054;font-size: 1em;">Cargando</p>
           </div>
           <div class="">
             <div class="leyenda-rectangulo" style="background-color: #4a72b2;display: inline-block;">
@@ -121,7 +119,7 @@
 
         <ion-col style="text-align: center;">
           <div class="p-2 bd-highlight">
-            <p style="color:#4e5054;font-size: 20px;">Disponible</p>
+            <p style="color:#4e5054;font-size: 1em;">Disponible</p>
           </div>
           <div class="">
             <div class="leyenda-rectangulo" style="background-color: #85af37;display: inline-block;">
@@ -131,7 +129,7 @@
 
         <ion-col style="text-align: center;">
           <div class="p-2 bd-highlight">
-            <p style="color:#4e5054;font-size: 20px;">No disponible</p>
+            <p style="color:#4e5054;font-size: 1rem;">No disponible</p>
           </div>
           <div>
             <div class="leyenda-rectangulo"
@@ -142,12 +140,12 @@
       </ion-row>
       <ion-row style="margin-top: 20px;">
         <ion-col style="display: flex;justify-content: center;align-items: center;flex-direction: column;">
-          <p style="color: #4e5054;font-size: 22px;margin: 0;">Conector 1:</p>
-          <p style="color: #4e5054;font-size: 22px;">{{cargador.mangueras[0].tipo_conector.nombre}}</p>
+          <p style="color: #4e5054;font-size: 1.2em;margin: 0;">Conector 1:</p>
+          <p style="color: #4e5054;font-size: 1.2em;">{{cargador.mangueras[0].tipo_conector.nombre}}</p>
         </ion-col>
         <ion-col style="display: flex;justify-content: center;align-items: center;flex-direction: column;">
-          <p style="color: #4e5054;font-size: 22px;margin: 0;">Conector 2:</p>
-          <p style="color: #4e5054;font-size: 22px;">{{cargador.mangueras[1].tipo_conector.nombre}}</p>
+          <p style="color: #4e5054;font-size: 1.2em;margin: 0;">Conector 2:</p>
+          <p style="color: #4e5054;font-size: 1.2em;">{{cargador.mangueras[1].tipo_conector.nombre}}</p>
         </ion-col>
       </ion-row>
     </ion-content>
@@ -159,17 +157,21 @@
   <ng-template>
     <ion-header translucent>
       <ion-toolbar>
-        <ion-title>Ubicación cargador</ion-title>
-        <ion-buttons slot="end">
-          <ion-button (click)="dismissModal(mapaModal)">Cerrar</ion-button>
+        <ion-title style="font-size: 1em;">Ubicación cargador</ion-title>
+        <ion-buttons slot="start">
+          <ion-button (click)="dismissModal(mapaModal)">
+            <ion-icon name="arrow-back-outline"></ion-icon>
+          </ion-button>
         </ion-buttons>
+        <logo-colbun slot="end"></logo-colbun>
       </ion-toolbar>
     </ion-header>
     <ion-content class="mapaContent">
       <div style="margin: 10px;border: 4px solid #4e5054;border-radius: 6px;" class="mapdiv">
 
-        <agm-map [latitude]="latitud" [longitude]="longitud" [zoom]="zoom" style="height: 100%;">
-          <agm-marker [latitude]="latitud" [longitude]="longitud" [markerDraggable]="false" [iconUrl]="markerIcon"></agm-marker>
+        <agm-map [latitude]="latitud" [longitude]="longitud" [zoom]="zoom" style="height: 100%;" [styles]="mapStyle">
+          <agm-marker [latitude]="latitud" [longitude]="longitud" [markerDraggable]="false" [iconUrl]="markerIcon">
+          </agm-marker>
         </agm-map>
       </div>
     </ion-content>

@@ -1,0 +1,12 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start" *ngIf="sandwich">
+      <ion-menu-button autoHide="false"></ion-menu-button>
+    </ion-buttons>
+    <ion-buttons slot="start" *ngIf="backButton">
+      <ion-back-button class="color-colbun-gray" defaultHref=""></ion-back-button>
+    </ion-buttons>
+    <ion-title class="color-colbun-gray" style="font-size: 1em;">{{headerTitle}}</ion-title>
+    <logo-colbun slot="end"></logo-colbun>
+  </ion-toolbar>
+</ion-header>

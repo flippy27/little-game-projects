@@ -1,11 +1,4 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button class="color-colbun-gray"></ion-back-button>
-    </ion-buttons>
-    <ion-title>Detalle carga</ion-title>
-    <logo-colbun slot="end"></logo-colbun>  </ion-toolbar>
-</ion-header>
+<header headerTitle="Detalle carga"></header>
 
 <ion-content>
   <div style="width: 100%;height: 100%;display: flex;align-items: center;justify-content: center;" *ngIf="loading">
@@ -16,13 +9,14 @@
 
     <ion-row style="margin-top: 10px;">
       <ion-col style="padding: 0;margin:0;display: flex;flex-direction: column;justify-content: center;" size="6">
-        <div style="height: 120px;display: flex;justify-content: center;">
-          <ion-img src="{{mangueraSeleccionadaConectorImg}}" style="width: 120px;height: 120px;"></ion-img>
+        <div style="display: flex;justify-content: center;">
+          <ion-img src="{{mangueraSeleccionadaConectorImg}}" style="width: 80px;height: 80px;"></ion-img>
         </div>
       </ion-col>
-      <ion-col class="item-box" size="6">
-        <p class="text-color box-title">Cargado</p>
-        <p class="text-color" style="font-size: 22px;font-weight: bold;">{{eair?eair:'0'}}kWh</p>
+      <ion-col class="item-box" size="6" style="height:100%;">
+        <p class="text-color box-title" style="margin: 0;padding: 5px 0;">Cargado</p>
+        <p class="text-color" style="font-size: 22px;font-weight: bold;margin: 0;padding: 5px 0;">{{eair?eair:'0'}}kWh
+        </p>
       </ion-col>
     </ion-row>
     <ion-row>
@@ -43,15 +37,17 @@
       <ion-col style="padding: 10px 0;">
 
         <p class="text-color box-other">Estado carga inicial</p>
-        <p class="text-color box-other" style="font-size: 22px;font-weight: bold;">{{socInicio}}%</p>
+        <p class="text-color box-other" style="font-size: 22px;font-weight: bold;">{{socInicio?socInicio+ '%':'-'}}</p>
 
         <p class="text-color box-other">{{is24Hour?'Estado carga final':'Estado carga actual'}}</p>
-        <p class="text-color box-other" style="font-size: 22px;font-weight: bold;">{{ultimoDatoMangueraSeleccionada.soc}}%</p>
+        <p class="text-color box-other" style="font-size: 22px;font-weight: bold;">{{socFin?socFin + '%':'-'}}</p>
 
       </ion-col>
       <ion-col style="display:flex;flex-direction: column;justify-content: center;">
         <p class="text-color box-title">Cargado en esta sesión</p>
-        <p class="text-color box-other" style="font-size: 30px;font-weight: bold;">{{ultimoDatoMangueraSeleccionada.soc - socInicio}}%</p>
+        <p class="text-color box-other" style="font-size: 30px;font-weight: bold;">
+          {{(socFin && socInicio)?socFin - socInicio + '%':'-'}}
+        </p>
       </ion-col>
 
     </ion-row>
